@@ -30,15 +30,4 @@ class Survey extends MyActiveRecord
         ], parent::rules());
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels()
-    {
-        return array_merge([
-            'name' => Yii::t('app', 'Survey Name'),
-        ], parent::attributeLabels());
-    }
-
-
 }
