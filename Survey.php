@@ -19,5 +19,26 @@ use andmemasin\myabstract\MyActiveRecord;
  */
 class Survey extends MyActiveRecord
 {
+    /**
+     * @inheritdoc
+     */
+    public function rules()
+    {
+        return array_merge([
+            [['name'], 'required'],
+            [['name'], 'string','max' => 500],
+        ], parent::rules());
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function attributeLabels()
+    {
+        return array_merge([
+            'name' => Yii::t('app', 'Survey Name'),
+        ], parent::attributeLabels());
+    }
+
 
 }
