@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\surveybasemodels;
+namespace andmemasin\surveybasemodels;
 
 use andmemasin\myabstract\MyActiveRecord;
 
@@ -13,6 +13,8 @@ use andmemasin\myabstract\MyActiveRecord;
  * @property int $id
  * @property string $key
  * @property string $name
+ * @property string $options The options as json string. Contains the
+ * Collector authentication information (or any other info)
  *
  */
 class Survey extends MyActiveRecord

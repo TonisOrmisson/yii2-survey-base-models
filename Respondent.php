@@ -1,9 +1,9 @@
 <?php
 
-namespace app\modules\surveybasemodels;
+namespace andmemasin\surveybasemodels;
 
 use andmemasin\myabstract\MyActiveRecord;
-
+use andmemasin\surveybasemodels\Survey;
 /**
  * This is the model class for a generic Respondent.
  *
