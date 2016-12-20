@@ -4,7 +4,6 @@ namespace andmemasin\surveybasemodels;
 
 use andmemasin\myabstract\MyActiveRecord;
 use andmemasin\surveybasemodels\Survey;
-use andmemasin\myabstract\traits\ModuleTrait;
 /**
  * This is the model class for a generic Respondent.
  *
@@ -14,6 +13,5 @@ use andmemasin\myabstract\traits\ModuleTrait;
  */
 class Respondent extends MyActiveRecord
 {
-    use ModuleTrait;
 
 }

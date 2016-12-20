@@ -3,7 +3,6 @@
 namespace andmemasin\surveybasemodels;
 
 use andmemasin\myabstract\MyActiveRecord;
-use andmemasin\myabstract\traits\ModuleTrait;
 
 /**
  * This is the model class for a generic Survey. This describes common
@@ -20,6 +19,5 @@ use andmemasin\myabstract\traits\ModuleTrait;
  */
 class Survey extends MyActiveRecord
 {
-    use ModuleTrait;
 
 }
