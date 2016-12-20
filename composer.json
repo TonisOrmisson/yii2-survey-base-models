@@ -1,0 +1,51 @@
+{
+  "name": "andmemasin/survey-base-models",
+
+  "type": "yii2-extension",
+
+  "dist": {
+    "url": "https://t6nnp6nn@bitbucket.org/andmemasin/survey-base-models.git",
+    "type": "git"
+  },
+
+  "description": "The base models for various survey apps",
+  "keywords": ["yii2", "peko", "data", "andmemasin"],
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://t6nnp6nn@bitbucket.org/andmemasin/survey.git"
+    },
+    {
+      "type": "vcs",
+      "url": "https://t6nnp6nn@bitbucket.org/andmemasin/yii2-myabstract.git"
+    }
+  ],
+
+  "support": {
+    "issues": "https://andmemasin.eu",
+    "source": "https://bitbucket.org/andmemasin/survey-base-models"
+
+  },
+  "authors": [
+    {
+      "name": "Tõnis Ormisson",
+      "email": "tonis@andmemasin.eu"
+    }
+  ],
+
+
+  "require": {
+    "php": ">=5.4.0",
+    "yiisoft/yii2": ">=2.0.5",
+    "andmemasin/survey": "dev-master",
+    "andmemasin/yii2-myabstract": "dev-master"
+  },
+
+
+  "autoload": {
+    "psr-4": {
+      "andmemasin\\surveybasemodels\\": ""
+    }
+  }
+
+}
