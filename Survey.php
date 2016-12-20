@@ -27,6 +27,7 @@ class Survey extends MyActiveRecord
         return array_merge([
             [['name'], 'required'],
             [['name'], 'string','max' => 500],
+            [['options'], 'string','max' => 1024 * 10],
         ], parent::rules());
     }
 
