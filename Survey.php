@@ -10,7 +10,7 @@ use andmemasin\myabstract\MyActiveRecord;
  * All Surveys in multiple modes (CATI, CAPI, PANEL, WEB etc.) must extend
  * this class.
  *
- * @property int $id
+ * @property int $survey_id
  * @property string $key
  * @property string $name
  * @property string $options The options as json string. Contains the
