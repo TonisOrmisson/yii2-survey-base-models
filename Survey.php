@@ -31,4 +31,8 @@ class Survey extends MyActiveRecord
         ], parent::rules());
     }
 
+    public function getOptionsDecoded(){
+        return json_decode($this->options);
+    }
+
 }
