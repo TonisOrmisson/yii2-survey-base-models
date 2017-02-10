@@ -3,7 +3,7 @@
 namespace andmemasin\surveybasemodels;
 
 use andmemasin\myabstract\ModelWithHasStatus;
-use andmemasin\survey\api\Status;
+use andmemasin\survey\Status;
 
 /**
  * This is the model class for a generic Survey. This describes common

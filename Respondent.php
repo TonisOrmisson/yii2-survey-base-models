@@ -38,5 +38,4 @@ class Respondent extends MyActiveRecord
         ];
     }
 
-
 }
