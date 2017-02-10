@@ -2,6 +2,7 @@
   "name": "andmemasin/survey-base-models",
 
   "type": "yii2-extension",
+  "license":"proprietary",
 
   "dist": {
     "url": "https://t6nnp6nn@bitbucket.org/andmemasin/survey-base-models.git",
