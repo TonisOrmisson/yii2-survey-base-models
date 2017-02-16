@@ -3,6 +3,7 @@
 namespace andmemasin\surveybasemodels;
 
 use andmemasin\myabstract\HasStatusModel;
+use andmemasin\survey\Status;
 
 /**
  * This is the model class for table "survey_has_status".
