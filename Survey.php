@@ -55,7 +55,7 @@ class Survey extends ModelWithHasStatus
      *
      */
     public function isKeyLocked(){
-        return Status::isLocked($this->currentStatus->status);
+        return Status::isLocked($this->currentStatus->id);
     }
 
 }
