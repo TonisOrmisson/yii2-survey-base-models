@@ -40,7 +40,7 @@ class SurveyHasStatus extends HasStatusModel
      */
     public static function create($survey,$status = null){
         $model = new static();
-        $model->survey_id = $survey->primaryKey();
+        $model->survey_id = $survey->primaryKey;
         $model->status =$survey->status;
         if($status){
             $model->status =$status;
