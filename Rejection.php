@@ -78,16 +78,17 @@ class Rejection extends MyActiveRecord
             ->all();
     }
 
+
     /**
      * Check whether there are rejections that match the respondent's token
      * @param string $code
      * @return bool
      */
     public static function rejectedByCode($code){
-        $response = Response::findByKey($code);
-        if($response){
+        $respondent = Respondent::findByToken($code);
+        if($respondent){
             $rejections = self::find()
-                ->andWhere(['respondent_id'=>$response->respondent->primaryKey])
+                ->andWhere(['respondent_id'=>$respondent->primaryKey])
                 ->all();
             if($rejections){
                 return true;
@@ -126,7 +127,7 @@ class Rejection extends MyActiveRecord
      */
     public function getSurvey()
     {
-        return $this->hasOne(Survey::className(), ['id' => 'survey_id']);
+        return $this->hasOne(Survey::className(), ['survey_id' => 'survey_id']);
     }
 
     /**
@@ -134,7 +135,7 @@ class Rejection extends MyActiveRecord
      */
     public function getRespondent()
     {
-        return $this->hasOne(Respondent::className(), ['id' => 'respondent_id']);
+        return $this->hasOne(Respondent::className(), ['respondent_id' => 'respondent_id']);
     }
 
     public static function getBounceTypes(){

@@ -38,4 +38,18 @@ class Respondent extends MyActiveRecord
         ];
     }
 
+    /**
+     * @param string $token Respondents token
+     * @return static|boolean
+     */
+    public static function findByToken($token = null){
+        if($token){
+            /** @var static $model */
+            $model = static::find()
+                ->andWhere('token=:token',[':token'=>$token])
+                ->one();
+            return $model;
+        }
+        return false;
+    }
 }
