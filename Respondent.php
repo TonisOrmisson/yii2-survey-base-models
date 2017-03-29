@@ -15,6 +15,7 @@ use yii;
  * @property Survey $survey
  * @property string $email_address
  *
+ * @property boolean $isRejected
  */
 class Respondent extends MyActiveRecord
 {
