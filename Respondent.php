@@ -52,4 +52,16 @@ class Respondent extends MyActiveRecord
         }
         return false;
     }
+
+    /**
+     * Check whether respondent has rejected this specific survey
+     * @return bool
+     */
+    public function getIsRejected(){
+        if(Rejection::rejectedByCode($this->token)){
+            return true;
+        }
+        return false;
+    }
+
 }
