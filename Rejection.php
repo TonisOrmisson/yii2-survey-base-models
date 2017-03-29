@@ -19,6 +19,11 @@ use yii;
  */
 class Rejection extends MyActiveRecord
 {
+    const BOUNCE_TYPE_HARD = 'hard';
+    const BOUNCE_TYPE_SOFT = 'soft';
+    const BOUNCE_TYPE_COMPLAINT = 'complaint';
+    const BOUNCE_TYPE_ANSWERED = 'answered';
+    const BOUNCE_TYPE_OTHER = 'other';
 
     /**
      * @inheritdoc
@@ -130,5 +135,15 @@ class Rejection extends MyActiveRecord
     public function getRespondent()
     {
         return $this->hasOne(Respondent::className(), ['id' => 'respondent_id']);
+    }
+
+    public static function getBounceTypes(){
+        return [
+            self::BOUNCE_TYPE_COMPLAINT => Yii::t('app','Complaint'),
+            self::BOUNCE_TYPE_SOFT => Yii::t('app','Soft bounce'),
+            self::BOUNCE_TYPE_HARD => Yii::t('app','Hard bounce'),
+            self::BOUNCE_TYPE_ANSWERED => Yii::t('app','Respondent has answered already'),
+            self::BOUNCE_TYPE_OTHER => Yii::t('app','Other'),
+        ];
     }
 }
