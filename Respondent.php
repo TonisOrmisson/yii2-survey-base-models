@@ -70,4 +70,18 @@ class Respondent extends MyActiveRecord
         return false;
     }
 
+    /**
+     * Get the last respondent based on Email-address
+     * @param string $email_address
+     * @return static
+     */
+    public static function getLatestByEmail($email_address){
+        /** @var static $model */
+        $model = static::find()
+            ->andWhere(['email_address'=>$email_address])
+            ->orderBy([static::primaryKey()[0]=>SORT_DESC])
+            ->one();
+        return $model;
+    }
+
 }
