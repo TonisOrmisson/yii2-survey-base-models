@@ -47,8 +47,8 @@ class Rejection extends MyActiveRecord
             [['email_address'], 'string', 'max' => 255],
             [['email_address'], 'email'],
             [['type'], 'string', 'max' => 45],
-            [['respondent_id'], 'exist', 'skipOnError' => true, 'targetClass' => Respondent::className(), 'targetAttribute' => ['respondent_id' => 'id']],
-            [['survey_id'], 'exist', 'skipOnError' => true, 'targetClass' => Survey::className(), 'targetAttribute' => ['survey_id' => 'id']],
+            [['respondent_id'], 'exist', 'skipOnError' => true, 'targetClass' => Respondent::className(), 'targetAttribute' => ['respondent_id' => 'respondent_id']],
+            [['survey_id'], 'exist', 'skipOnError' => true, 'targetClass' => Survey::className(), 'targetAttribute' => ['survey_id' => 'survey_id']],
         ],  parent::rules());
     }
 
