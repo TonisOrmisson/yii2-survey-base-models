@@ -67,6 +67,7 @@ class Respondent extends MyActiveRecord
         if(Rejection::bouncedByEmailAddress($this->email_address)){
             return true;
         }
+
         return false;
     }
 
