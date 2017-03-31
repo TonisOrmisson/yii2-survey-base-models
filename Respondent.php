@@ -3,8 +3,8 @@
 namespace andmemasin\surveybasemodels;
 
 use andmemasin\myabstract\MyActiveRecord;
-use andmemasin\surveybasemodels\Survey;
 use yii;
+use yii\helpers\StringHelper;
 
 /**
  * This is the model class for a generic Respondent.
@@ -14,7 +14,7 @@ use yii;
  * @property string $token
  * @property Survey $survey
  * @property string $email_address
- * @property string $alternative_email_addresses Inserted as CSV, stored as JSON
+ * @property string[] $alternative_email_addresses Inserted as CSV, stored as JSON, returned as string[]
  *
  * @property boolean $isRejected
  */
@@ -77,9 +77,8 @@ class Respondent extends MyActiveRecord
 
     public function validateMultipleEmails($attribute){
         if($this->alternative_email_addresses && trim($this->alternative_email_addresses)<>''){
-            $addresses = yii\helpers\StringHelper::explode($this->alternative_email_addresses);
+            $addresses = StringHelper::explode($this->alternative_email_addresses);
             $cleanAddresses = [];
-            $skippedAddresses = [];
             if(!empty($addresses)){
                 $i=0;
                 foreach ($addresses as $address){
@@ -95,6 +94,13 @@ class Respondent extends MyActiveRecord
                 $this->alternative_email_addresses = yii\helpers\Json::encode($cleanAddresses);
             }
         }
+    }
+
+    /** @inheritdoc */
+    public function afterFind()
+    {
+        parent::afterFind();
+        $this->alternative_email_addresses = yii\helpers\Json::decode($this->alternative_email_addresses,true);
     }
 
 
