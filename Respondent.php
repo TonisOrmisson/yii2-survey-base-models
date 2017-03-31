@@ -94,7 +94,11 @@ class Respondent extends MyActiveRecord
                         $cleanAddresses[]=$address;
                     }
                 }
-                $this->alternative_email_addresses = yii\helpers\Json::encode($cleanAddresses);
+                if(!empty($cleanAddresses)){
+                    $this->alternative_email_addresses = yii\helpers\Json::encode($cleanAddresses);
+                } else {
+                    $this->alternative_email_addresses = null;
+                }
             }
         }
     }
