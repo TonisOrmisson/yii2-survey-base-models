@@ -14,7 +14,7 @@ use yii\helpers\StringHelper;
  * @property string $token
  * @property Survey $survey
  * @property string $email_address
- * @property string[] $alternative_email_addresses Inserted as CSV, stored as JSON, returned as string[]
+ * @property string $alternative_email_addresses Inserted as CSV, stored as JSON
  *
  * @property boolean $isRejected
  */
@@ -44,13 +44,16 @@ class Respondent extends MyActiveRecord
     public function validateEmail($attribute,$address = null){
         if(!$address or empty($address)){
             $address = $this->email_address;
+            $isSameAsMainAddress = false;
+        }else{
+            $isSameAsMainAddress = ($attribute=='email_address' ? false : $address == $this->email_address);
+
         }
 
         $validator = new yii\validators\EmailValidator();
         $isValidFormat = $validator->validate($address);
 
 
-        $isSameAsMainAddress = ($attribute=='email_address' ? false : $address == $this->email_address);
         $isDuplicate = $this->isEmailSurveyDuplicate($address);
 
         if($isValidFormat && !$isSameAsMainAddress && !$isDuplicate){
@@ -60,7 +63,7 @@ class Respondent extends MyActiveRecord
             if(!$isValidFormat){
                 $reason = Yii::t('app','Invalid email format');
             } else if($isSameAsMainAddress){
-                $reason = Yii::t('app','Duplicates main address');
+                $reason = Yii::t('app',$attribute. 'Duplicates main address');
             } else if($isDuplicate) {
                 $reason = Yii::t('app','Duplicates some other address');
             }
@@ -76,9 +79,9 @@ class Respondent extends MyActiveRecord
 
 
     public function validateMultipleEmails($attribute){
-        if($this->alternative_email_addresses && trim($this->alternative_email_addresses)<>''){
-            $addresses = StringHelper::explode($this->alternative_email_addresses);
+        if($this->alternative_email_addresses){
             $cleanAddresses = [];
+            $addresses = yii\helpers\Json::decode($this->alternative_email_addresses);
             if(!empty($addresses)){
                 $i=0;
                 foreach ($addresses as $address){
@@ -96,12 +99,6 @@ class Respondent extends MyActiveRecord
         }
     }
 
-    /** @inheritdoc */
-    public function afterFind()
-    {
-        parent::afterFind();
-        $this->alternative_email_addresses = yii\helpers\Json::decode($this->alternative_email_addresses,true);
-    }
 
 
     /**
