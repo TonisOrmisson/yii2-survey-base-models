@@ -22,6 +22,7 @@ class Respondent extends MyActiveRecord
 {
     const MAX_ALTERNATIVE_EMAILS = 20;
 
+
     /**
      * @inheritdoc
      */
