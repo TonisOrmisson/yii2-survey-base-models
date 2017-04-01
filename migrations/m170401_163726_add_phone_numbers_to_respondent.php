@@ -4,27 +4,15 @@ use yii\db\Migration;
 
 class m170401_163726_add_phone_numbers_to_respondent extends Migration
 {
-    public function up()
-    {
-
-    }
-    
-
-    public function down()
-    {
-        echo "m170401_163726_add_phone_numbers_to_respondent cannot be reverted.\n";
-
-        return false;
-    }
-
-    /*
-    // Use safeUp/safeDown to run migration code within a transaction
     public function safeUp()
     {
+        $this->addColumn('respondent','phone_number',$this->string(64)->null()->after('alternative_email_addresses')->comment('Phone number'));
+        $this->addColumn('respondent','alternative_phone_numbers',$this->text()->null()->after('phone_number')->comment('Alternative phone numbers'));
     }
 
     public function safeDown()
     {
+        $this->dropColumn('respondent','phone_number');
+        $this->dropColumn('respondent','alternative_phone_numbers');
     }
-    */
 }
