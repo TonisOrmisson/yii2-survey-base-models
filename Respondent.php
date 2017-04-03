@@ -4,7 +4,8 @@ namespace andmemasin\surveybasemodels;
 
 use andmemasin\myabstract\MyActiveRecord;
 use yii;
-use yii\helpers\StringHelper;
+use borales\extensions\phoneInput\PhoneInputValidator;
+use borales\extensions\phoneInput\PhoneInputBehavior;
 
 /**
  * This is the model class for a generic Respondent.
@@ -15,13 +16,29 @@ use yii\helpers\StringHelper;
  * @property Survey $survey
  * @property string $email_address
  * @property string $alternative_email_addresses Inserted as CSV, stored as JSON
+ * @property string $phone_number
+ * @property string $alternative_phone_numbers Inserted as CSV, stored as JSON
  *
  * @property boolean $isRejected
  */
 class Respondent extends MyActiveRecord
 {
-    const MAX_ALTERNATIVE_EMAILS = 20;
+    const MAX_ALTERNATIVE_CONTACTS = 20;
 
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return array_merge([
+            'phoneInput' => [
+                'class'=>PhoneInputBehavior::className(),
+                'attributes'=>[
+                    'phoneAttribute'=>'phone_number',
+                ]
+            ],
+        ],parent::behaviors());
+    }
 
     /**
      * @inheritdoc
@@ -37,6 +54,8 @@ class Respondent extends MyActiveRecord
             ['email_address','filter', 'filter' => 'strtolower'],
             [['alternative_email_addresses'], 'string'],
             [['alternative_email_addresses'], 'validateMultipleEmails'],
+            [['phone_number'],'string'],
+            [['phone_number'],PhoneInputValidator::className()],
             [['token'], 'unique'],
         ], parent::rules());
     }
@@ -87,8 +106,8 @@ class Respondent extends MyActiveRecord
                 $i=0;
                 foreach ($addresses as $address){
                     $i++;
-                    if($i>=static::MAX_ALTERNATIVE_EMAILS){
-                        $this->addError($attribute,Yii::t('app','Maximum alternative addresses limit ({0}) reached for {1}',[static::MAX_ALTERNATIVE_EMAILS,$this->email_address]));
+                    if($i>=static::MAX_ALTERNATIVE_CONTACTS){
+                        $this->addError($attribute,Yii::t('app','Maximum alternative addresses limit ({0}) reached for {1}',[static::MAX_ALTERNATIVE_CONTACTS,$this->email_address]));
                     }
                     $address = strtolower(trim($address));
                     if($this->validateEmail($attribute,$address)){
@@ -140,7 +159,7 @@ class Respondent extends MyActiveRecord
 
     /**
      * @param string $token Respondents token
-     * @return static|boolean
+     * @return static
      */
     public static function findByToken($token = null){
         if($token){
@@ -150,7 +169,7 @@ class Respondent extends MyActiveRecord
                 ->one();
             return $model;
         }
-        return false;
+        return null;
     }
 
     /**
