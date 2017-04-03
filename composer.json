@@ -11,17 +11,6 @@
 
   "description": "The base models for various survey apps",
   "keywords": ["yii2", "peko", "data", "andmemasin"],
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "https://t6nnp6nn@bitbucket.org/andmemasin/survey.git"
-    },
-    {
-      "type": "vcs",
-      "url": "https://t6nnp6nn@bitbucket.org/andmemasin/yii2-myabstract.git"
-    }
-
-  ],
 
   "support": {
     "issues": "https://andmemasin.eu",
@@ -48,7 +37,7 @@
 
   "extra": {
     "branch-alias": {
-      "dev-master": "1.1.x-dev"
+      "dev-master": "1.2.x-dev"
     }
   },
 
