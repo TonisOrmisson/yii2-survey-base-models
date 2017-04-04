@@ -8,7 +8,8 @@
   "keywords": ["yii2", "peko", "data", "andmemasin"],
   "source": {
     "url": "https://t6nnp6nn@bitbucket.org/andmemasin/survey-base-models.git",
-    "type": "git"
+    "type": "git",
+    "reference": "master"
   },
 
   "support": {
