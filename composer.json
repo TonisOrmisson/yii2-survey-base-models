@@ -4,11 +4,6 @@
   "type": "yii2-extension",
   "license":"proprietary",
 
-  "dist": {
-    "url": "https://t6nnp6nn@bitbucket.org/andmemasin/survey-base-models.git",
-    "type": "git"
-  },
-
   "description": "The base models for various survey apps",
   "keywords": ["yii2", "peko", "data", "andmemasin"],
 
@@ -29,8 +24,8 @@
   "require": {
     "php": ">=5.4.0",
     "yiisoft/yii2": ">=2.0.5",
-    "andmemasin/survey": "~0.5",
-    "andmemasin/yii2-myabstract": "~1.2",
+    "andmemasin/survey": "dev-master",
+    "andmemasin/yii2-myabstract": "dev-master",
     "borales/yii2-phone-input": "*"
 
   },
