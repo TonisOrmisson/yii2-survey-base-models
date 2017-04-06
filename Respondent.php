@@ -4,8 +4,6 @@ namespace andmemasin\surveybasemodels;
 
 use andmemasin\myabstract\MyActiveRecord;
 use yii;
-use borales\extensions\phoneInput\PhoneInputValidator;
-use borales\extensions\phoneInput\PhoneInputBehavior;
 
 /**
  * This is the model class for a generic Respondent.
@@ -25,20 +23,6 @@ class Respondent extends MyActiveRecord
 {
     const MAX_ALTERNATIVE_CONTACTS = 20;
 
-    /**
-     * @inheritdoc
-     */
-    public function behaviors()
-    {
-        return array_merge([
-            'phoneInput' => [
-                'class'=>PhoneInputBehavior::className(),
-                'attributes'=>[
-                    'phoneAttribute'=>'phone_number',
-                ]
-            ],
-        ],parent::behaviors());
-    }
 
     /**
      * @inheritdoc
@@ -55,7 +39,6 @@ class Respondent extends MyActiveRecord
             [['alternative_email_addresses'], 'string'],
             [['alternative_email_addresses'], 'validateMultipleEmails'],
             [['phone_number'],'string'],
-            [['phone_number'],PhoneInputValidator::className()],
             [['token'], 'unique'],
         ], parent::rules());
     }
