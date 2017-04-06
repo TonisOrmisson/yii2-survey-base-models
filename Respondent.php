@@ -39,6 +39,8 @@ class Respondent extends MyActiveRecord
             ['email_address','filter', 'filter' => 'strtolower'],
             [['alternative_email_addresses'], 'string'],
             [['alternative_email_addresses'], 'validateMultipleEmails'],
+            [['phone_number','email_address'],'trim'],
+            ['phone_number','filter', 'filter' => 'strtolower'],
             [['phone_number'],'string'],
             [['phone_number'],'validatePhoneNumber'],
             [['token'], 'unique'],
@@ -116,7 +118,6 @@ class Respondent extends MyActiveRecord
         }else{
             $isSameAsMain = ($attribute=='phone_number' ? false : $phone_number == $this->phone_number);
         }
-        // TODO
         // TODO
         $isValidFormat = true;
 
