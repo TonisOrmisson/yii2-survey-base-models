@@ -3,6 +3,7 @@
 namespace andmemasin\surveybasemodels;
 
 use andmemasin\myabstract\MyActiveRecord;
+use borales\extensions\phoneInput\PhoneInputValidator;
 use yii;
 
 /**
@@ -39,6 +40,7 @@ class Respondent extends MyActiveRecord
             [['alternative_email_addresses'], 'string'],
             [['alternative_email_addresses'], 'validateMultipleEmails'],
             [['phone_number'],'string'],
+            [['phone_number'],'validatePhoneNumber'],
             [['token'], 'unique'],
         ], parent::rules());
     }
@@ -106,6 +108,64 @@ class Respondent extends MyActiveRecord
         }
     }
 
+
+    public function validatePhoneNumber($attribute, $phone_number = null){
+        if(!$phone_number or empty($phone_number)){
+            $phone_number = $this->phone_number;
+            $isSameAsMain = false;
+        }else{
+            $isSameAsMain = ($attribute=='phone_number' ? false : $phone_number == $this->phone_number);
+        }
+        // TODO
+        // TODO
+        $isValidFormat = true;
+
+        $isDuplicate = $this->isPhoneSurveyDuplicate($phone_number);
+
+        if($isValidFormat && !$isSameAsMain && !$isDuplicate){
+            return true;
+        }else{
+            $reason = '';
+            if(!$isValidFormat){
+                $reason = Yii::t('app','Invalid phone number format');
+            } else if($isSameAsMain){
+                $reason = Yii::t('app',$attribute. 'Duplicates main phone number');
+            } else if($isDuplicate) {
+                $reason = Yii::t('app','Duplicate phone number');
+            }
+
+            $this->addError($attribute,
+                Yii::t('app',
+                    'Invalid phone number "{0}"',[$phone_number]
+                ).' '.Yii::t('app','Reason: {0}',[$reason])
+            );
+        }
+        return false;
+    }
+
+
+
+    /**
+     * @param string $phone_number Phone number to check duplicates for
+     * @return bool
+     */
+    public function isPhoneSurveyDuplicate($phone_number){
+        $query = static::find();
+        // check only this survey
+        $query->andWhere(['survey_id'=>$this->survey_id]);
+        // not itself
+        $query->andWhere(['!=','respondent_id',$this->respondent_id]);
+
+        $condition = ['or',
+            '`phone_number`=:phone_number',
+            '`alternative_phone_numbers` LIKE :phone_number2',
+        ];
+        $query->andWhere($condition,[':phone_number'=>$phone_number,':phone_number2'=>'%\"'.$phone_number.'\"%']);
+        if($query->count() > 0){
+            return true;
+        }
+        return false;
+    }
 
 
     /**
