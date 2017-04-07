@@ -43,6 +43,8 @@ class Respondent extends MyActiveRecord
             ['phone_number','filter', 'filter' => 'strtolower'],
             [['phone_number'],'string'],
             [['phone_number'],'validatePhoneNumber'],
+            [['alternative_phone_numbers'], 'string'],
+            [['alternative_phone_numbers'],'validateMultiplePhoneNumbers'],
             [['token'], 'unique'],
         ], parent::rules());
     }
@@ -91,7 +93,14 @@ class Respondent extends MyActiveRecord
             $addresses = yii\helpers\Json::decode($this->alternative_email_addresses);
             if(!empty($addresses)){
                 $i=0;
-                foreach ($addresses as $address){
+                foreach ($addresses as $key => $address){
+                    // check the alternative numbers of that model for duplicates
+                    $checkItems = $addresses;
+                    unset($checkItems[$key]);
+                    if(in_array($address,$checkItems)){
+                        $this->addError($attribute,Yii::t('app','Duplicate email in alternative email addresses'));
+                    }
+
                     $i++;
                     if($i>=static::MAX_ALTERNATIVE_CONTACTS){
                         $this->addError($attribute,Yii::t('app','Maximum alternative addresses limit ({0}) reached for {1}',[static::MAX_ALTERNATIVE_CONTACTS,$this->email_address]));
@@ -142,6 +151,40 @@ class Respondent extends MyActiveRecord
             );
         }
         return false;
+    }
+
+    public function validateMultiplePhoneNumbers($attribute){
+        if($this->alternative_phone_numbers){
+            $cleanItems = [];
+            $items = yii\helpers\Json::decode($this->alternative_phone_numbers);
+            if(!empty($items)){
+                $i=0;
+                foreach ($items as $key=> $item){
+
+                    // check the alternative numbers of that model for duplicates
+                    $checkItems = $items;
+                    unset($checkItems[$key]);
+                    if(in_array($item,$checkItems)){
+                        $this->addError($attribute,Yii::t('app','Duplicate number in alternative phone numbers'));
+                    }
+
+
+                    $i++;
+                    if($i>=static::MAX_ALTERNATIVE_CONTACTS){
+                        $this->addError($attribute,Yii::t('app','Maximum alternative phone numbers limit ({0}) reached for {1}',[static::MAX_ALTERNATIVE_CONTACTS,$this->phone_number]));
+                    }
+                    $item = strtolower(trim($item));
+                    if($this->validatePhoneNumber($attribute,$item)){
+                        $cleanItems[]=$item;
+                    }
+                }
+                if(!empty($cleanItems)){
+                    $this->alternative_phone_numbers = yii\helpers\Json::encode($cleanItems);
+                } else {
+                    $this->alternative_phone_numbers = null;
+                }
+            }
+        }
     }
 
 
