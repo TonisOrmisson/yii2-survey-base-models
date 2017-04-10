@@ -36,6 +36,7 @@ class Respondent extends MyActiveRecord
             [['email_address'], 'email'],
             [['email_address'], 'validateEmail'],
             // email addresses always lowercase
+            [['email_address','email_address'],'trim'],
             ['email_address','filter', 'filter' => 'strtolower'],
             [['alternative_email_addresses'], 'string'],
             [['alternative_email_addresses'], 'validateMultipleEmails'],
@@ -72,7 +73,7 @@ class Respondent extends MyActiveRecord
             if(!$isValidFormat){
                 $reason = Yii::t('app','Invalid email format');
             } else if($isSameAsMainAddress){
-                $reason = Yii::t('app',$attribute. 'Duplicates main address');
+                $reason = Yii::t('app',$attribute. ' duplicates main address');
             } else if($isDuplicate) {
                 $reason = Yii::t('app','Duplicates some other address');
             }
@@ -139,7 +140,7 @@ class Respondent extends MyActiveRecord
             if(!$isValidFormat){
                 $reason = Yii::t('app','Invalid phone number format');
             } else if($isSameAsMain){
-                $reason = Yii::t('app',$attribute. 'Duplicates main phone number');
+                $reason = Yii::t('app',$attribute. ' duplicates main phone number');
             } else if($isDuplicate) {
                 $reason = Yii::t('app','Duplicate phone number');
             }
