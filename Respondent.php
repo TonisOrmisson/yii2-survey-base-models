@@ -23,6 +23,10 @@ use yii;
 class Respondent extends MyActiveRecord
 {
     const MAX_ALTERNATIVE_CONTACTS = 20;
+    public function init()
+    {
+        parent::init();
+    }
 
 
     /**
@@ -61,6 +65,7 @@ class Respondent extends MyActiveRecord
         }
 
         $validator = new yii\validators\EmailValidator();
+        $validator->checkDNS = true;
         $isValidFormat = $validator->validate($address);
 
 
