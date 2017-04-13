@@ -26,6 +26,11 @@ class Respondent extends MyActiveRecord
     /** @var bool $checkDSNForEmails whether email validation also used DSN records to check if domain exists */
     public static $checkDSNForEmails = true;
 
+    /**
+     * @var array $surveyIdentifyingColumns names of the columns that identify a respondent as unique inside a survey
+     */
+    public static $surveyIdentifyingColumns = ['phone_number','email_address'];
+
     public function init()
     {
         parent::init();
@@ -171,7 +176,7 @@ class Respondent extends MyActiveRecord
                 foreach ($items as $key=> $item){
                     $item = strtolower(trim($item));
                     if($item <> ''){
-
+                        $i++;
                         // check the alternative numbers of that model for duplicates
                         $checkItems = $items;
                         unset($checkItems[$key]);
@@ -180,7 +185,6 @@ class Respondent extends MyActiveRecord
                         }
 
 
-                        $i++;
                         if($i>=static::MAX_ALTERNATIVE_CONTACTS){
                             $this->addError($attribute,Yii::t('app','Maximum alternative phone numbers limit ({0}) reached for {1}',[static::MAX_ALTERNATIVE_CONTACTS,$this->phone_number]));
                         }
@@ -220,7 +224,6 @@ class Respondent extends MyActiveRecord
             '`alternative_phone_numbers` LIKE :phone_number2',
         ];
         $query->andWhere($condition,[':phone_number'=>$phone_number,':phone_number2'=>'%\"'.$phone_number.'\"%']);
-        echo $query->createCommand()->rawSql;
         if($query->count() > 0){
             return true;
         }
