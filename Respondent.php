@@ -165,25 +165,29 @@ class Respondent extends MyActiveRecord
         if($this->alternative_phone_numbers){
             $cleanItems = [];
             $items = yii\helpers\Json::decode($this->alternative_phone_numbers);
+
             if(!empty($items)){
                 $i=0;
                 foreach ($items as $key=> $item){
-
-                    // check the alternative numbers of that model for duplicates
-                    $checkItems = $items;
-                    unset($checkItems[$key]);
-                    if(in_array($item,$checkItems)){
-                        $this->addError($attribute,Yii::t('app','Duplicate number in alternative phone numbers'));
-                    }
-
-
-                    $i++;
-                    if($i>=static::MAX_ALTERNATIVE_CONTACTS){
-                        $this->addError($attribute,Yii::t('app','Maximum alternative phone numbers limit ({0}) reached for {1}',[static::MAX_ALTERNATIVE_CONTACTS,$this->phone_number]));
-                    }
                     $item = strtolower(trim($item));
-                    if($this->validatePhoneNumber($attribute,$item)){
-                        $cleanItems[]=$item;
+                    if($item <> ''){
+
+                        // check the alternative numbers of that model for duplicates
+                        $checkItems = $items;
+                        unset($checkItems[$key]);
+                        if(in_array($item,$checkItems)){
+                            $this->addError($attribute,Yii::t('app','Duplicate number in alternative phone numbers'));
+                        }
+
+
+                        $i++;
+                        if($i>=static::MAX_ALTERNATIVE_CONTACTS){
+                            $this->addError($attribute,Yii::t('app','Maximum alternative phone numbers limit ({0}) reached for {1}',[static::MAX_ALTERNATIVE_CONTACTS,$this->phone_number]));
+                        }
+                        if($this->validatePhoneNumber($attribute,$item)){
+                            $cleanItems[]=$item;
+                        }
+
                     }
                 }
                 if(!empty($cleanItems)){
@@ -205,14 +209,18 @@ class Respondent extends MyActiveRecord
         $query = static::find();
         // check only this survey
         $query->andWhere(['survey_id'=>$this->survey_id]);
-        // not itself
-        $query->andWhere(['!=','respondent_id',$this->respondent_id]);
+
+        if($this->respondent_id){
+            // not itself
+            $query->andWhere(['!=','respondent_id',$this->respondent_id]);
+        }
 
         $condition = ['or',
             '`phone_number`=:phone_number',
             '`alternative_phone_numbers` LIKE :phone_number2',
         ];
         $query->andWhere($condition,[':phone_number'=>$phone_number,':phone_number2'=>'%\"'.$phone_number.'\"%']);
+        echo $query->createCommand()->rawSql;
         if($query->count() > 0){
             return true;
         }
@@ -229,7 +237,10 @@ class Respondent extends MyActiveRecord
         // check only this survey
         $query->andWhere(['survey_id'=>$this->survey_id]);
         // not itself
-        $query->andWhere(['!=','respondent_id',$this->respondent_id]);
+        if($this->respondent_id){
+            // not itself
+            $query->andWhere(['!=','respondent_id',$this->respondent_id]);
+        }
 
         $email_condition = ['or',
             '`email_address`=:email_address',
