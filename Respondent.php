@@ -23,6 +23,9 @@ use yii;
 class Respondent extends MyActiveRecord
 {
     const MAX_ALTERNATIVE_CONTACTS = 20;
+    /** @var bool $checkDSNForEmails whether email validation also used DSN records to check if domain exists */
+    public static $checkDSNForEmails = true;
+
     public function init()
     {
         parent::init();
@@ -65,9 +68,8 @@ class Respondent extends MyActiveRecord
         }
 
         $validator = new yii\validators\EmailValidator();
-        $validator->checkDNS = true;
+        $validator->checkDNS = static::$checkDSNForEmails;
         $isValidFormat = $validator->validate($address);
-
 
         $isDuplicate = $this->isEmailSurveyDuplicate($address);
 
