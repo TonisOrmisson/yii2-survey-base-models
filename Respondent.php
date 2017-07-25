@@ -3,7 +3,6 @@
 namespace andmemasin\surveybasemodels;
 
 use andmemasin\myabstract\MyActiveRecord;
-use borales\extensions\phoneInput\PhoneInputValidator;
 use yii;
 
 /**

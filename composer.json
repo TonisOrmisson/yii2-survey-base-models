@@ -30,9 +30,7 @@
     "php": ">=5.4.0",
     "yiisoft/yii2": ">=2.0.5",
     "andmemasin/survey": "0.5.*",
-    "andmemasin/yii2-myabstract": "1.2.*",
-    "borales/yii2-phone-input": "*"
-
+    "andmemasin/yii2-myabstract": "1.2.*"
   },
 
   "extra": {
