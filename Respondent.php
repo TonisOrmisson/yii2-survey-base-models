@@ -44,7 +44,6 @@ class Respondent extends MyActiveRecord
         return array_merge([
             [['survey_id'], 'required'],
             [['survey_id'], 'integer'],
-            [['email_address'], 'email'],
             [['email_address'], 'validateEmail'],
             // email addresses always lowercase
             [['email_address','email_address'],'trim'],
@@ -68,7 +67,6 @@ class Respondent extends MyActiveRecord
             $isSameAsMainAddress = false;
         }else{
             $isSameAsMainAddress = ($attribute=='email_address' ? false : $address == $this->email_address);
-
         }
 
         $validator = new yii\validators\EmailValidator();
@@ -100,27 +98,30 @@ class Respondent extends MyActiveRecord
 
 
     public function validateMultipleEmails($attribute){
-        if($this->alternative_email_addresses){
+        $addresses = yii\helpers\Json::decode($this->alternative_email_addresses);
+        if($this->alternative_email_addresses && !empty($addresses)){
             $cleanAddresses = [];
-            $addresses = yii\helpers\Json::decode($this->alternative_email_addresses);
             if(!empty($addresses)){
                 $i=0;
                 foreach ($addresses as $key => $address){
-                    // check the alternative numbers of that model for duplicates
-                    $checkItems = $addresses;
-                    unset($checkItems[$key]);
-                    if(in_array($address,$checkItems)){
-                        $this->addError($attribute,Yii::t('app','Duplicate email in alternative email addresses'));
+                    if($address <> ""){
+                        // check the alternative numbers of that model for duplicates
+                        $checkItems = $addresses;
+                        unset($checkItems[$key]);
+                        if(in_array($address,$checkItems)){
+                            $this->addError($attribute,Yii::t('app','Duplicate email in alternative email addresses'));
+                        }
+
+                        $i++;
+                        if($i>=static::MAX_ALTERNATIVE_CONTACTS){
+                            $this->addError($attribute,Yii::t('app','Maximum alternative addresses limit ({0}) reached for {1}',[static::MAX_ALTERNATIVE_CONTACTS,$this->email_address]));
+                        }
+                        $address = strtolower(trim($address));
+                        if($this->validateEmail($attribute,$address)){
+                            $cleanAddresses[]=$address;
+                        }
                     }
 
-                    $i++;
-                    if($i>=static::MAX_ALTERNATIVE_CONTACTS){
-                        $this->addError($attribute,Yii::t('app','Maximum alternative addresses limit ({0}) reached for {1}',[static::MAX_ALTERNATIVE_CONTACTS,$this->email_address]));
-                    }
-                    $address = strtolower(trim($address));
-                    if($this->validateEmail($attribute,$address)){
-                        $cleanAddresses[]=$address;
-                    }
                 }
                 if(!empty($cleanAddresses)){
                     $this->alternative_email_addresses = yii\helpers\Json::encode($cleanAddresses);
