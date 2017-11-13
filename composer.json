@@ -6,16 +6,13 @@
 
   "description": "The base models for various survey apps",
   "keywords": ["yii2", "peko", "data", "andmemasin"],
-  "source": {
-    "url": "https://bitbucket.org/andmemasin/survey-base-models",
-    "type": "vcs",
-    "reference": "master"
-  },
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://packages.andmemasin.eu"
+    }
+  ],
 
-  "support": {
-    "issues": "https://andmemasin.eu"
-
-  },
   "authors": [
     {
       "name": "Tõnis Ormisson",
