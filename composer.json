@@ -23,7 +23,7 @@
   "minimum-stability": "dev",
   "prefer-stable": true,
   "require": {
-    "php": "~5.6.0",
+    "php": ">=5.6.0",
     "yiisoft/yii2": "~2.0.13",
     "andmemasin/survey": "~0.5.0",
     "andmemasin/yii2-myabstract": "~2.0.1",
