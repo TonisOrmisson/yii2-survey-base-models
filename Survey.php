@@ -2,9 +2,11 @@
 
 namespace andmemasin\surveybasemodels;
 
+use andmemasin\collector\models\LimeSurveyCollector;
 use andmemasin\myabstract\ModelWithHasStatus;
 use andmemasin\survey\Status;
 use andmemasin\collector\models\Collector;
+use app\modules\andmemasin\collector\models\LimeSurvey3Collector;
 use yii;
 use andmemasin\collector\models\CollectorInterface;
 
@@ -95,11 +97,13 @@ class Survey extends ModelWithHasStatus
     {
         $model = Collector::findOne($this->collector_id);
         if($model){
+
             /** @var Collector $collector */
             $collector = Yii::createObject([
                 'class' => $model->getClassName(),
                 'survey'=>$this,
                 'collector_id' => $this->collector_id,
+                'type'=>$model->type,
             ]);
             return $collector;
         }
