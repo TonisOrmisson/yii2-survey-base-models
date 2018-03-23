@@ -32,7 +32,7 @@ class Survey extends ModelWithHasStatus
      */
     public function init()
     {
-        $this->hasStatusClassName = SurveyHasStatus::className();
+        $this->hasStatusClassName = SurveyHasStatus::class;
         parent::init();
     }
 

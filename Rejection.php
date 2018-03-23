@@ -47,8 +47,8 @@ class Rejection extends MyActiveRecord
             [['email_address'], 'string', 'max' => 255],
             [['email_address'], 'email'],
             [['type'], 'string', 'max' => 45],
-            [['respondent_id'], 'exist', 'skipOnError' => true, 'targetClass' => Respondent::className(), 'targetAttribute' => ['respondent_id' => 'respondent_id']],
-            [['survey_id'], 'exist', 'skipOnError' => true, 'targetClass' => Survey::className(), 'targetAttribute' => ['survey_id' => 'survey_id']],
+            [['respondent_id'], 'exist', 'skipOnError' => true, 'targetClass' => Respondent::class, 'targetAttribute' => ['respondent_id' => 'respondent_id']],
+            [['survey_id'], 'exist', 'skipOnError' => true, 'targetClass' => Survey::class, 'targetAttribute' => ['survey_id' => 'survey_id']],
         ],  parent::rules());
     }
 
@@ -127,7 +127,7 @@ class Rejection extends MyActiveRecord
      */
     public function getSurvey()
     {
-        return $this->hasOne(Survey::className(), ['survey_id' => 'survey_id']);
+        return $this->hasOne(Survey::class, ['survey_id' => 'survey_id']);
     }
 
     /**
@@ -135,7 +135,7 @@ class Rejection extends MyActiveRecord
      */
     public function getRespondent()
     {
-        return $this->hasOne(Respondent::className(), ['respondent_id' => 'respondent_id']);
+        return $this->hasOne(Respondent::class, ['respondent_id' => 'respondent_id']);
     }
 
     public static function getBounceTypes(){

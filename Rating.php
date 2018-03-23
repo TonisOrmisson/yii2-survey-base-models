@@ -48,7 +48,7 @@ class Rating extends MyActiveRecord
             [['respondent_id', 'survey_id', 'sample_id', 'value'], 'required'],
             [['respondent_id', 'survey_id', 'sample_id', 'value'], 'integer'],
             [['comment'], 'string'],
-            [['respondent_id'], 'exist', 'skipOnError' => true, 'targetClass' => Respondent::className(), 'targetAttribute' => ['respondent_id' => 'respondent_id']],
+            [['respondent_id'], 'exist', 'skipOnError' => true, 'targetClass' => Respondent::class, 'targetAttribute' => ['respondent_id' => 'respondent_id']],
         ],  parent::rules());
     }
 
@@ -72,7 +72,7 @@ class Rating extends MyActiveRecord
      */
     public function getRespondent()
     {
-        return $this->hasOne(Respondent::className(), ['respondent_id' => 'respondent_id']);
+        return $this->hasOne(Respondent::class, ['respondent_id' => 'respondent_id']);
     }
 
 }
