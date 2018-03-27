@@ -272,13 +272,24 @@ class Respondent extends MyActiveRecord
      */
     public static function findByToken($token = null){
         if($token){
-            /** @var static $model */
-            $model = static::find()
-                ->andWhere('token=:token',[':token'=>$token])
-                ->one();
-            return $model;
+            $models = self::findByTokens([$token]);
+            if (!empty($models)){
+                return $models[0];
+            }
         }
         return null;
+    }
+
+    /**
+     * @param string[] $tokens Respondents tokens
+     * @return static[]
+     */
+    public static function findByTokens($tokens){
+        /** @var static[] $model */
+        $models = static::find()
+            ->andWhere(['in','token', $tokens])
+            ->all();
+        return $models;
     }
 
     /**
