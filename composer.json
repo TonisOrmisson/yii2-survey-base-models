@@ -25,7 +25,7 @@
   "require": {
     "php": ">=7.1",
     "yiisoft/yii2": "~2.0.14",
-    "pascaldevink/shortuuid":"~1",
+    "pascaldevink/shortuuid":"~2",
 
     "andmemasin/survey": "~0.5.8",
     "andmemasin/yii2-myabstract": ">=2.3.0",
