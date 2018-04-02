@@ -3,6 +3,8 @@
 namespace andmemasin\surveybasemodels;
 
 use andmemasin\myabstract\MyActiveRecord;
+use PascalDeVink\ShortUuid\ShortUuid;
+use Ramsey\Uuid\Uuid;
 use yii;
 
 /**
@@ -18,6 +20,7 @@ use yii;
  * @property string $alternative_phone_numbers Inserted as CSV, stored as JSON
  *
  * @property boolean $isRejected
+ * @property string $shortToken If the token is uuid, then short-uuid will be returned
  */
 class Respondent extends MyActiveRecord
 {
@@ -320,5 +323,18 @@ class Respondent extends MyActiveRecord
             ->one();
         return $model;
     }
+
+    /**
+     * @return string
+     */
+    public function getShortToken(){
+        if(Uuid::isValid($this->token)){
+            $uuid = Uuid::fromString($this->token);
+            $shotUuid = new ShortUuid();
+            return $shotUuid->encode($uuid);
+        }
+        return $this->token;
+    }
+
 
 }
