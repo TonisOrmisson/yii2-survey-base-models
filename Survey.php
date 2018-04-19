@@ -26,7 +26,7 @@ use andmemasin\collector\models\CollectorInterface;
  */
 class Survey extends ModelWithHasStatus
 {
-    public $hasStatusClassName = SurveyHasStatus::class;
+    public static $hasStatusClassName = SurveyHasStatus::class;
 
 
     /**
