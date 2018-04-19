@@ -3,7 +3,6 @@
 namespace andmemasin\surveybasemodels;
 
 use andmemasin\myabstract\ModelWithHasStatus;
-use andmemasin\survey\Status;
 use andmemasin\collector\models\Collector;
 use yii;
 use andmemasin\collector\models\CollectorInterface;
@@ -27,14 +26,7 @@ use andmemasin\collector\models\CollectorInterface;
  */
 class Survey extends ModelWithHasStatus
 {
-    /**
-     * @inheritdoc
-     */
-    public function init()
-    {
-        $this->hasStatusClassName = SurveyHasStatus::class;
-        parent::init();
-    }
+    public $hasStatusClassName = SurveyHasStatus::class;
 
 
     /**
@@ -74,16 +66,6 @@ class Survey extends ModelWithHasStatus
 
     public function getOptionsDecoded(){
         return json_decode($this->options);
-    }
-
-    /**
-     * Check whether survey key is locked.
-     * A new key may be assigned to survey only when the key is newly created
-     * and no any further statuses have not been assigned to it
-     *
-     */
-    public function isKeyLocked(){
-        return Status::isLocked($this->currentStatus->id);
     }
 
 
