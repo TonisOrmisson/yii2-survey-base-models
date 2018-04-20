@@ -35,7 +35,7 @@ class Survey extends ModelWithHasStatus
     public function rules()
     {
         return array_merge([
-            [['name'], 'required'],
+            [['name','status'], 'required'],
             [['name', 'status'], 'string', 'max' => 255],
             [['name'], 'string','max' => 500],
             [['collector_id'], 'integer'],
