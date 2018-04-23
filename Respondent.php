@@ -45,7 +45,7 @@ class Respondent extends MyActiveRecord
     public function rules()
     {
         return array_merge([
-            [['survey_id'], 'required'],
+            [['survey_id','token'], 'required'],
             [['survey_id'], 'integer'],
             [['email_address'], 'validateEmail'],
             // email addresses always lowercase
