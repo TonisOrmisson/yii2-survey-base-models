@@ -30,7 +30,7 @@ class Survey extends ModelWithHasStatus
 
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function rules()
     {
@@ -43,7 +43,7 @@ class Survey extends ModelWithHasStatus
         ], parent::rules());
     }
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function attributeLabels()
     {

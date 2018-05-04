@@ -16,7 +16,7 @@ class SurveyHasStatus extends HasStatusModel
 {
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function init()
     {
@@ -25,7 +25,7 @@ class SurveyHasStatus extends HasStatusModel
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static function tableName()
     {
@@ -48,7 +48,7 @@ class SurveyHasStatus extends HasStatusModel
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function rules()
     {

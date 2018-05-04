@@ -22,7 +22,7 @@ class Rating extends MyActiveRecord
     public $initRespondent;
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static function tableName()
     {
@@ -30,7 +30,7 @@ class Rating extends MyActiveRecord
     }
     
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static function modelName()
     {
@@ -40,7 +40,7 @@ class Rating extends MyActiveRecord
      
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function rules()
     {
@@ -53,7 +53,7 @@ class Rating extends MyActiveRecord
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function attributeLabels()
     {

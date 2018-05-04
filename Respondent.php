@@ -40,7 +40,7 @@ class Respondent extends MyActiveRecord
 
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function rules()
     {
@@ -260,7 +260,7 @@ class Respondent extends MyActiveRecord
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function attributeLabels()
     {

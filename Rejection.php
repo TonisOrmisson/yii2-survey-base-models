@@ -26,7 +26,7 @@ class Rejection extends MyActiveRecord
     const BOUNCE_TYPE_OTHER = 'other';
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static function tableName()
     {
@@ -35,7 +35,7 @@ class Rejection extends MyActiveRecord
     
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function rules()
     {
