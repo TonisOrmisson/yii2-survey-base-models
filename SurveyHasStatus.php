@@ -36,6 +36,7 @@ class SurveyHasStatus extends HasStatusModel
     /**
      * @param Survey $survey
      * @param string $status if not set Status will be taken from Email
+     * @return boolean
      */
     public static function create($survey,$status = null){
         $model = new static();
