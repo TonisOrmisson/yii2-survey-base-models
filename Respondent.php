@@ -64,39 +64,61 @@ class Respondent extends MyActiveRecord
     }
 
 
-    public function validateEmail($attribute,$address = null){
-        if(!$address or empty($address)){
-            $address = $this->email_address;
-            $isSameAsMainAddress = false;
-        }else{
-            $isSameAsMainAddress = ($attribute=='email_address' ? false : $address == $this->email_address);
-        }
 
+    /**
+     * @param string $attribute
+     * @param string $address
+     * @return bool
+     */
+    public function validateEmail($attribute,$address = null){
+
+        if($this->validateEmailFormat($attribute, $address)
+            && !$this->isSameAsMainAddress($attribute, $address)
+            && !$this->isEmailSurveyDuplicate($attribute, $address)){
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @param string $attribute
+     * @param string $address
+     * @return bool
+     */
+    private function validateEmailFormat($attribute, $address = null)
+    {
         $validator = new yii\validators\EmailValidator();
         $validator->checkDNS = static::$checkDSNForEmails;
-        $isValidFormat = $validator->validate($address);
-
-        $isDuplicate = $this->isEmailSurveyDuplicate($address);
-
-        if($isValidFormat && !$isSameAsMainAddress && !$isDuplicate){
-            return true;
-        }else{
-            $reason = '';
-            if(!$isValidFormat){
-                $reason = Yii::t('app','Invalid email format');
-            } else if($isSameAsMainAddress){
-                $reason = Yii::t('app',$attribute. ' duplicates main address');
-            } else if($isDuplicate) {
-                $reason = Yii::t('app','Duplicates some other address');
-            }
-
+        if (!$validator->validate($address)) {
             $this->addError($attribute,
                 Yii::t('app',
                     'Invalid email address "{0}"',[$address]
-                ).' '.Yii::t('app','Reason: {0}',[$reason])
+                ).' '.Yii::t('app','Reason: {0}',[Yii::t('app','Invalid email format')])
+            );
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * @param string $attribute
+     * @param string $address
+     * @return bool
+     */
+    private function isSameAsMainAddress($attribute, $address = null)
+    {
+        if(!$address or empty($address)){
+            return false;
+        }
+        $isSame = ($attribute=='email_address' ? false : $address == $this->email_address);
+        if ($isSame) {
+            $this->addError($attribute,
+                Yii::t('app',
+                    'Invalid email address "{0}"',[$address]
+                ).' '.Yii::t('app','Reason: {0}',[Yii::t('app',$attribute. ' duplicates main address')])
             );
         }
-        return false;
+        return $isSame;
     }
 
 
@@ -238,7 +260,7 @@ class Respondent extends MyActiveRecord
      * @param string $email_address Email address to check duplicates for
      * @return bool
      */
-    public function isEmailSurveyDuplicate($email_address){
+    public function isEmailSurveyDuplicate($attribute, $email_address){
         $query = static::find();
         // check only this survey
         $query->andWhere(['survey_id'=>$this->survey_id]);
@@ -256,6 +278,13 @@ class Respondent extends MyActiveRecord
         if($query->count() > 0){
             return true;
         }
+
+        $this->addError($attribute,
+            Yii::t('app',
+                'Invalid email address "{0}"',[$email_address]
+            ).' '.Yii::t('app','Reason: {0}',[Yii::t('app','Duplicates some other address')])
+        );
+
         return false;
     }
 
