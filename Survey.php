@@ -36,6 +36,7 @@ class Survey extends ModelWithHasStatus
             [['options'], 'string','max' => 1024 * 10],
         ], parent::rules());
     }
+
     /**
      * {@inheritdoc}
      */
@@ -49,6 +50,10 @@ class Survey extends ModelWithHasStatus
             'key' => Yii::t('app', 'Survey key'),
         ];
     }
+
+    /**
+     * {@inheritdoc}
+     */
     public function attributeHints()
     {
         return [
@@ -56,9 +61,24 @@ class Survey extends ModelWithHasStatus
         ];
     }
 
+    /**
+     * @return mixed
+     */
     public function getOptionsDecoded(){
         return json_decode($this->options);
     }
+
+
+    /**
+     * @param string $key survey uuid
+     * @return static|array|null|yii\db\ActiveRecord
+     */
+    public static function findByKey($key)
+    {
+        return static::find()->andWhere("key=:key", [":key" => $key])->one();
+    }
+
+
 
 
 
