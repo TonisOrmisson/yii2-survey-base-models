@@ -170,37 +170,34 @@ class Respondent extends MyActiveRecord
             $cleanItems = [];
             $items = yii\helpers\Json::decode($this->alternative_phone_numbers);
 
-            if(!empty($items)){
+            if (!empty($items)) {
                 $i=0;
                 foreach ($items as $key=> $item){
                     $item = strtolower(trim($item));
-                    if($item <> ''){
+                    if ($item <> '') {
                         $i++;
-                        // check the alternative numbers of that model for duplicates
-                        $checkItems = $items;
-                        unset($checkItems[$key]);
-                        if(in_array($item,$checkItems)){
-                            $this->addError($attribute,Yii::t('app','Duplicate number in alternative phone numbers'));
+                        $this->validateAlternativePhoneNumberInternalDuplicates($attribute, $item, $key);
+
+                        if( $i >= static::MAX_ALTERNATIVE_CONTACTS){
+                            $this->addError($attribute, Yii::t('app','Maximum alternative phone numbers limit ({0}) reached for {1}',[static::MAX_ALTERNATIVE_CONTACTS,$this->phone_number]));
                         }
 
-
-                        if($i>=static::MAX_ALTERNATIVE_CONTACTS){
-                            $this->addError($attribute,Yii::t('app','Maximum alternative phone numbers limit ({0}) reached for {1}',[static::MAX_ALTERNATIVE_CONTACTS,$this->phone_number]));
-                        }
-                        if($this->validatePhoneNumber($attribute,$item)){
-                            $cleanItems[]=$item;
-                        }
-
+                        $this->validatePhoneNumber($attribute, $item);
                     }
-                }
-                if(!empty($cleanItems)){
-                    $this->alternative_phone_numbers = yii\helpers\Json::encode($cleanItems);
-                } else {
-                    $this->alternative_phone_numbers = null;
                 }
             }
         }
     }
+
+    private function validateAlternativePhoneNumberInternalDuplicates($attribute, $number,  $key) {
+        $items = yii\helpers\Json::decode($this->alternative_phone_numbers);
+        $checkItems = $items;
+        unset($checkItems[$key]);
+        if (in_array($number, $checkItems)) {
+            $this->addError($attribute, Yii::t('app','Duplicate number in alternative phone numbers'));
+        }
+    }
+
 
 
     /**
@@ -236,7 +233,7 @@ class Respondent extends MyActiveRecord
         // check only this survey
         $query->andWhere(['survey_id'=>$this->survey_id]);
 
-        if($this->respondent_id){
+        if ($this->respondent_id) {
             // not itself
             $query->andWhere(['!=','respondent_id',$this->respondent_id]);
         }
@@ -245,9 +242,10 @@ class Respondent extends MyActiveRecord
             '`phone_number`=:phone_number',
             '`alternative_phone_numbers` LIKE :phone_number2',
         ];
+
         $query->andWhere($condition,[':phone_number'=>$phone_number,':phone_number2'=>'%\"'.$phone_number.'\"%']);
 
-        if($query->count() > 0) {
+        if ($query->count() > 0) {
             $this->addError($attribute,
                 Yii::t('app',
                     'Invalid phone number "{0}"',[$phone_number]
@@ -330,10 +328,11 @@ class Respondent extends MyActiveRecord
      * @return bool
      */
     public function getIsRejected(){
-        if(Rejection::rejectedByCode($this->token)){
+        if (Rejection::rejectedByCode($this->token)) {
             return true;
         }
-        if(Rejection::bouncedByEmailAddress($this->email_address)){
+
+        if (Rejection::bouncedByEmailAddress($this->email_address)) {
             return true;
         }
 
@@ -358,7 +357,7 @@ class Respondent extends MyActiveRecord
      * @return string
      */
     public function getShortToken(){
-        if(Uuid::isValid($this->token)){
+        if (Uuid::isValid($this->token)) {
             $uuid = Uuid::fromString($this->token);
             $shotUuid = new ShortUuid();
             return $shotUuid->encode($uuid);
