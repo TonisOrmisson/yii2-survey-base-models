@@ -3,6 +3,7 @@
 namespace andmemasin\surveybasemodels;
 
 use andmemasin\myabstract\ModelWithHasStatus;
+use andmemasin\survey\Status;
 use yii;
 
 /**
@@ -22,6 +23,7 @@ use yii;
 class Survey extends ModelWithHasStatus
 {
     public static $hasStatusClassName = SurveyHasStatus::class;
+    public static $statusModelClass = Status::class;
 
 
     /**
