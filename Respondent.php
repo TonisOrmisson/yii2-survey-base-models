@@ -136,6 +136,7 @@ class Respondent extends MyActiveRecord
                 if (in_array($address, $checkItems)) {
                     $this->addError($attribute, Yii::t('app', 'Duplicate email in alternative email addresses'));
                 }
+
                 if ($i >= static::MAX_ALTERNATIVE_CONTACTS) {
                     $this->addError($attribute, Yii::t('app', 'Maximum alternative addresses limit ({0}) reached for {1}', [static::MAX_ALTERNATIVE_CONTACTS, $this->email_address]));
                 }
@@ -145,6 +146,7 @@ class Respondent extends MyActiveRecord
                 }
             }
         }
+        $this->alternative_email_addresses = yii\helpers\Json::encode($cleanAddresses);
     }
 
 
@@ -158,27 +160,22 @@ class Respondent extends MyActiveRecord
 
     public function validateMultiplePhoneNumbers($attribute)
     {
-        if ($this->alternative_phone_numbers) {
-            $cleanItems = [];
-            $items = yii\helpers\Json::decode($this->alternative_phone_numbers);
+        $cleanItems = [];
+        $items = yii\helpers\Json::decode($this->alternative_phone_numbers);
+        if (!empty($items)) {
+            $i = 0;
+            foreach ($items as $key => $item) {
+                $i++;
+                $item = strtolower(trim($item));
+                $this->validateAlternativePhoneNumberInternalDuplicates($attribute, $item, $key);
 
-            if (!empty($items)) {
-                $i = 0;
-                foreach ($items as $key => $item) {
-                    $item = strtolower(trim($item));
-                    if ($item <> '') {
-                        $i++;
-                        $this->validateAlternativePhoneNumberInternalDuplicates($attribute, $item, $key);
-
-                        if ($i >= static::MAX_ALTERNATIVE_CONTACTS) {
-                            $this->addError($attribute, Yii::t('app', 'Maximum alternative phone numbers limit ({0}) reached for {1}', [static::MAX_ALTERNATIVE_CONTACTS, $this->phone_number]));
-                        }
-
-                        $this->validatePhoneNumber($attribute, $item);
-                    }
+                if ($i >= static::MAX_ALTERNATIVE_CONTACTS) {
+                    $this->addError($attribute, Yii::t('app', 'Maximum alternative phone numbers limit ({0}) reached for {1}', [static::MAX_ALTERNATIVE_CONTACTS, $this->phone_number]));
                 }
+               $this->validatePhoneNumber($attribute, $item);
             }
         }
+        $this->alternative_phone_numbers = yii\helpers\Json::encode($cleanItems);
     }
 
     private function validateAlternativePhoneNumberInternalDuplicates($attribute, $number, $key)
