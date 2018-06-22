@@ -107,11 +107,11 @@ class Respondent extends MyActiveRecord
      */
     private function isSameAsMainAddress($attribute, $address = null)
     {
-        if (empty($address)) {
+        if (empty($address) | $attribute == 'email_address' ) {
             return false;
         }
 
-        if ($attribute == 'email_address' ? false : $address == $this->email_address) {
+        if ($address === $this->email_address) {
             $this->addError($attribute,
                 Yii::t('app',
                     'Invalid email address "{0}"', [$address]
@@ -198,13 +198,11 @@ class Respondent extends MyActiveRecord
      */
     private function validateSameAsMainNumber($attribute, $number = null)
     {
-        if (!$number or empty($number)) {
+        if (empty($number) | $attribute === 'phone_number') {
             return null;
         }
 
-        $isSame = ($attribute == 'phone_number' ? false : $number == $this->phone_number);
-
-        if ($isSame) {
+        if ($number === $this->phone_number) {
             $this->addError($attribute,
                 Yii::t('app',
                     'Invalid phone number "{0}"', [$number]
@@ -256,8 +254,9 @@ class Respondent extends MyActiveRecord
         $query = static::find();
         // check only this survey
         $query->andWhere(['survey_id' => $this->survey_id]);
+
         // not itself
-        if ($this->respondent_id) {
+        if (!empty($this->respondent_id)) {
             // not itself
             $query->andWhere(['!=', 'respondent_id', $this->respondent_id]);
         }
@@ -266,6 +265,7 @@ class Respondent extends MyActiveRecord
             '`email_address`=:email_address',
             '`alternative_email_addresses` LIKE :email_address2',
         ];
+
         $query->andWhere($email_condition, [':email_address' => $email_address, ':email_address2' => '%\"' . $email_address . '\"%']);
         if ($query->count() > 0) {
             return true;
