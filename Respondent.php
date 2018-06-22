@@ -107,18 +107,19 @@ class Respondent extends MyActiveRecord
      */
     private function isSameAsMainAddress($attribute, $address = null)
     {
-        if (!$address or empty($address)) {
+        if (empty($address)) {
             return false;
         }
-        $isSame = ($attribute == 'email_address' ? false : $address == $this->email_address);
-        if ($isSame) {
+
+        if ($attribute == 'email_address' ? false : $address == $this->email_address) {
             $this->addError($attribute,
                 Yii::t('app',
                     'Invalid email address "{0}"', [$address]
                 ) . ' ' . Yii::t('app', 'Reason: {0}', [Yii::t('app', $attribute . ' duplicates main address')])
             );
+            return false;
         }
-        return $isSame;
+        return true;
     }
 
 
@@ -157,6 +158,7 @@ class Respondent extends MyActiveRecord
         $isValidFormat = true;
         $this->validatePhoneSurveyDuplicate($attribute, $phone_number);
     }
+
 
     public function validateMultiplePhoneNumbers($attribute)
     {
