@@ -31,7 +31,7 @@ class Respondent extends MyActiveRecord
     /**
      * @var array $surveyIdentifyingColumns names of the columns that identify a respondent as unique inside a survey
      */
-    public static $surveyIdentifyingColumns = ['phone_number','email_address'];
+    public static $surveyIdentifyingColumns = ['phone_number', 'email_address'];
 
     public function init()
     {
@@ -45,24 +45,23 @@ class Respondent extends MyActiveRecord
     public function rules()
     {
         return array_merge([
-            [['survey_id','token'], 'required'],
+            [['survey_id', 'token'], 'required'],
             [['survey_id'], 'integer'],
             [['email_address'], 'validateEmail'],
             // email addresses always lowercase
-            [['email_address','email_address'],'trim'],
-            ['email_address','filter', 'filter' => 'strtolower'],
+            [['email_address', 'email_address'], 'trim'],
+            ['email_address', 'filter', 'filter' => 'strtolower'],
             [['alternative_email_addresses'], 'string'],
             [['alternative_email_addresses'], 'validateMultipleEmails'],
-            [['phone_number','email_address'],'trim'],
-            ['phone_number','filter', 'filter' => 'strtolower'],
-            [['phone_number'],'string'],
-            [['phone_number'],'validatePhoneNumber'],
+            [['phone_number', 'email_address'], 'trim'],
+            ['phone_number', 'filter', 'filter' => 'strtolower'],
+            [['phone_number'], 'string'],
+            [['phone_number'], 'validatePhoneNumber'],
             [['alternative_phone_numbers'], 'string'],
-            [['alternative_phone_numbers'],'validateMultiplePhoneNumbers'],
+            [['alternative_phone_numbers'], 'validateMultiplePhoneNumbers'],
             [['token'], 'unique'],
         ], parent::rules());
     }
-
 
 
     /**
@@ -70,11 +69,12 @@ class Respondent extends MyActiveRecord
      * @param string $address
      * @return bool
      */
-    public function validateEmail($attribute,$address = null){
+    public function validateEmail($attribute, $address = null)
+    {
 
-        if($this->validateEmailFormat($attribute, $address)
+        if ($this->validateEmailFormat($attribute, $address)
             && !$this->isSameAsMainAddress($attribute, $address)
-            && !$this->isEmailSurveyDuplicate($attribute, $address)){
+            && !$this->isEmailSurveyDuplicate($attribute, $address)) {
             return true;
         }
         return false;
@@ -92,8 +92,8 @@ class Respondent extends MyActiveRecord
         if (!$validator->validate($address)) {
             $this->addError($attribute,
                 Yii::t('app',
-                    'Invalid email address "{0}"',[$address]
-                ).' '.Yii::t('app','Reason: {0}',[Yii::t('app','Invalid email format')])
+                    'Invalid email address "{0}"', [$address]
+                ) . ' ' . Yii::t('app', 'Reason: {0}', [Yii::t('app', 'Invalid email format')])
             );
             return false;
         }
@@ -107,79 +107,71 @@ class Respondent extends MyActiveRecord
      */
     private function isSameAsMainAddress($attribute, $address = null)
     {
-        if(!$address or empty($address)){
+        if (!$address or empty($address)) {
             return false;
         }
-        $isSame = ($attribute=='email_address' ? false : $address == $this->email_address);
+        $isSame = ($attribute == 'email_address' ? false : $address == $this->email_address);
         if ($isSame) {
             $this->addError($attribute,
                 Yii::t('app',
-                    'Invalid email address "{0}"',[$address]
-                ).' '.Yii::t('app','Reason: {0}',[Yii::t('app',$attribute. ' duplicates main address')])
+                    'Invalid email address "{0}"', [$address]
+                ) . ' ' . Yii::t('app', 'Reason: {0}', [Yii::t('app', $attribute . ' duplicates main address')])
             );
         }
         return $isSame;
     }
 
 
-    public function validateMultipleEmails($attribute){
+    public function validateMultipleEmails($attribute)
+    {
+        $cleanAddresses = [];
         $addresses = yii\helpers\Json::decode($this->alternative_email_addresses);
-        if($this->alternative_email_addresses && !empty($addresses)){
-            $cleanAddresses = [];
-            if(!empty($addresses)){
-                $i=0;
-                foreach ($addresses as $key => $address){
-                    if($address <> ""){
-                        // check the alternative numbers of that model for duplicates
-                        $checkItems = $addresses;
-                        unset($checkItems[$key]);
-                        if(in_array($address,$checkItems)){
-                            $this->addError($attribute,Yii::t('app','Duplicate email in alternative email addresses'));
-                        }
-
-                        $i++;
-                        if($i>=static::MAX_ALTERNATIVE_CONTACTS){
-                            $this->addError($attribute,Yii::t('app','Maximum alternative addresses limit ({0}) reached for {1}',[static::MAX_ALTERNATIVE_CONTACTS,$this->email_address]));
-                        }
-                        $address = strtolower(trim($address));
-                        if($this->validateEmail($attribute,$address)){
-                            $cleanAddresses[]=$address;
-                        }
-                    }
-
+        if (!empty($addresses)) {
+            $i = 0;
+            foreach ($addresses as $key => $address) {
+                $i++;
+                // check the alternative numbers of that model for duplicates
+                $checkItems = $addresses;
+                unset($checkItems[$key]);
+                if (in_array($address, $checkItems)) {
+                    $this->addError($attribute, Yii::t('app', 'Duplicate email in alternative email addresses'));
                 }
-                if(!empty($cleanAddresses)){
-                    $this->alternative_email_addresses = yii\helpers\Json::encode($cleanAddresses);
-                } else {
-                    $this->alternative_email_addresses = null;
+                if ($i >= static::MAX_ALTERNATIVE_CONTACTS) {
+                    $this->addError($attribute, Yii::t('app', 'Maximum alternative addresses limit ({0}) reached for {1}', [static::MAX_ALTERNATIVE_CONTACTS, $this->email_address]));
+                }
+                $address = strtolower(trim($address));
+                if ($this->validateEmail($attribute, $address)) {
+                    $cleanAddresses[] = $address;
                 }
             }
         }
     }
 
 
-    public function validatePhoneNumber($attribute, $phone_number = null){
+    public function validatePhoneNumber($attribute, $phone_number = null)
+    {
         $this->validateSameAsMainNumber($attribute, $phone_number);
         // TODO
         $isValidFormat = true;
         $this->validatePhoneSurveyDuplicate($attribute, $phone_number);
     }
 
-    public function validateMultiplePhoneNumbers($attribute){
-        if($this->alternative_phone_numbers){
+    public function validateMultiplePhoneNumbers($attribute)
+    {
+        if ($this->alternative_phone_numbers) {
             $cleanItems = [];
             $items = yii\helpers\Json::decode($this->alternative_phone_numbers);
 
             if (!empty($items)) {
-                $i=0;
-                foreach ($items as $key=> $item){
+                $i = 0;
+                foreach ($items as $key => $item) {
                     $item = strtolower(trim($item));
                     if ($item <> '') {
                         $i++;
                         $this->validateAlternativePhoneNumberInternalDuplicates($attribute, $item, $key);
 
-                        if( $i >= static::MAX_ALTERNATIVE_CONTACTS){
-                            $this->addError($attribute, Yii::t('app','Maximum alternative phone numbers limit ({0}) reached for {1}',[static::MAX_ALTERNATIVE_CONTACTS,$this->phone_number]));
+                        if ($i >= static::MAX_ALTERNATIVE_CONTACTS) {
+                            $this->addError($attribute, Yii::t('app', 'Maximum alternative phone numbers limit ({0}) reached for {1}', [static::MAX_ALTERNATIVE_CONTACTS, $this->phone_number]));
                         }
 
                         $this->validatePhoneNumber($attribute, $item);
@@ -189,15 +181,15 @@ class Respondent extends MyActiveRecord
         }
     }
 
-    private function validateAlternativePhoneNumberInternalDuplicates($attribute, $number,  $key) {
+    private function validateAlternativePhoneNumberInternalDuplicates($attribute, $number, $key)
+    {
         $items = yii\helpers\Json::decode($this->alternative_phone_numbers);
         $checkItems = $items;
         unset($checkItems[$key]);
         if (in_array($number, $checkItems)) {
-            $this->addError($attribute, Yii::t('app','Duplicate number in alternative phone numbers'));
+            $this->addError($attribute, Yii::t('app', 'Duplicate number in alternative phone numbers'));
         }
     }
-
 
 
     /**
@@ -211,13 +203,13 @@ class Respondent extends MyActiveRecord
             return null;
         }
 
-        $isSame = ($attribute=='phone_number' ? false : $number == $this->phone_number);
+        $isSame = ($attribute == 'phone_number' ? false : $number == $this->phone_number);
 
         if ($isSame) {
             $this->addError($attribute,
                 Yii::t('app',
-                    'Invalid phone number "{0}"',[$number]
-                ).' '.Yii::t('app','Reason: {0}',[Yii::t('app',$attribute. ' duplicates main phone number')])
+                    'Invalid phone number "{0}"', [$number]
+                ) . ' ' . Yii::t('app', 'Reason: {0}', [Yii::t('app', $attribute . ' duplicates main phone number')])
             );
         }
         return null;
@@ -228,14 +220,15 @@ class Respondent extends MyActiveRecord
      * @param string $attribute
      * @param string $phone_number Phone number to check duplicates for
      */
-    private function validatePhoneSurveyDuplicate($attribute, $phone_number){
+    private function validatePhoneSurveyDuplicate($attribute, $phone_number)
+    {
         $query = static::find();
         // check only this survey
-        $query->andWhere(['survey_id'=>$this->survey_id]);
+        $query->andWhere(['survey_id' => $this->survey_id]);
 
         if ($this->respondent_id) {
             // not itself
-            $query->andWhere(['!=','respondent_id',$this->respondent_id]);
+            $query->andWhere(['!=', 'respondent_id', $this->respondent_id]);
         }
 
         $condition = ['or',
@@ -243,13 +236,13 @@ class Respondent extends MyActiveRecord
             '`alternative_phone_numbers` LIKE :phone_number2',
         ];
 
-        $query->andWhere($condition,[':phone_number'=>$phone_number,':phone_number2'=>'%\"'.$phone_number.'\"%']);
+        $query->andWhere($condition, [':phone_number' => $phone_number, ':phone_number2' => '%\"' . $phone_number . '\"%']);
 
         if ($query->count() > 0) {
             $this->addError($attribute,
                 Yii::t('app',
-                    'Invalid phone number "{0}"',[$phone_number]
-                ).' '.Yii::t('app','Reason: {0}',[Yii::t('app','Duplicate phone number')])
+                    'Invalid phone number "{0}"', [$phone_number]
+                ) . ' ' . Yii::t('app', 'Reason: {0}', [Yii::t('app', 'Duplicate phone number')])
             );
         }
     }
@@ -259,29 +252,30 @@ class Respondent extends MyActiveRecord
      * @param string $email_address Email address to check duplicates for
      * @return bool
      */
-    public function isEmailSurveyDuplicate($attribute, $email_address){
+    public function isEmailSurveyDuplicate($attribute, $email_address)
+    {
         $query = static::find();
         // check only this survey
-        $query->andWhere(['survey_id'=>$this->survey_id]);
+        $query->andWhere(['survey_id' => $this->survey_id]);
         // not itself
-        if($this->respondent_id){
+        if ($this->respondent_id) {
             // not itself
-            $query->andWhere(['!=','respondent_id',$this->respondent_id]);
+            $query->andWhere(['!=', 'respondent_id', $this->respondent_id]);
         }
 
         $email_condition = ['or',
             '`email_address`=:email_address',
             '`alternative_email_addresses` LIKE :email_address2',
         ];
-        $query->andWhere($email_condition,[':email_address'=>$email_address,':email_address2'=>'%\"'.$email_address.'\"%']);
-        if($query->count() > 0){
+        $query->andWhere($email_condition, [':email_address' => $email_address, ':email_address2' => '%\"' . $email_address . '\"%']);
+        if ($query->count() > 0) {
             return true;
         }
 
         $this->addError($attribute,
             Yii::t('app',
-                'Invalid email address "{0}"',[$email_address]
-            ).' '.Yii::t('app','Reason: {0}',[Yii::t('app','Duplicates some other address')])
+                'Invalid email address "{0}"', [$email_address]
+            ) . ' ' . Yii::t('app', 'Reason: {0}', [Yii::t('app', 'Duplicates some other address')])
         );
 
         return false;
@@ -301,10 +295,11 @@ class Respondent extends MyActiveRecord
      * @param string $token Respondents token
      * @return static
      */
-    public static function findByToken($token = null){
-        if($token){
+    public static function findByToken($token = null)
+    {
+        if ($token) {
             $models = self::findByTokens([$token]);
-            if (!empty($models)){
+            if (!empty($models)) {
                 return $models[0];
             }
         }
@@ -315,10 +310,11 @@ class Respondent extends MyActiveRecord
      * @param string[] $tokens Respondents tokens
      * @return static[]
      */
-    public static function findByTokens($tokens){
+    public static function findByTokens($tokens)
+    {
         /** @var static[] $model */
         $models = static::find()
-            ->andWhere(['in','token', $tokens])
+            ->andWhere(['in', 'token', $tokens])
             ->all();
         return $models;
     }
@@ -327,7 +323,8 @@ class Respondent extends MyActiveRecord
      * Check whether respondent has rejected this specific survey or has a hard bounce on e_mail address
      * @return bool
      */
-    public function getIsRejected(){
+    public function getIsRejected()
+    {
         if (Rejection::rejectedByCode($this->token)) {
             return true;
         }
@@ -344,11 +341,12 @@ class Respondent extends MyActiveRecord
      * @param string $email_address
      * @return static
      */
-    public static function getLatestByEmail($email_address){
+    public static function getLatestByEmail($email_address)
+    {
         /** @var static $model */
         $model = static::find()
-            ->andWhere(['email_address'=>$email_address])
-            ->orderBy([static::primaryKey()[0]=>SORT_DESC])
+            ->andWhere(['email_address' => $email_address])
+            ->orderBy([static::primaryKey()[0] => SORT_DESC])
             ->one();
         return $model;
     }
@@ -356,7 +354,8 @@ class Respondent extends MyActiveRecord
     /**
      * @return string
      */
-    public function getShortToken(){
+    public function getShortToken()
+    {
         if (Uuid::isValid($this->token)) {
             $uuid = Uuid::fromString($this->token);
             $shotUuid = new ShortUuid();
