@@ -69,14 +69,19 @@ class Respondent extends MyActiveRecord
      * @param string $address
      * @return bool
      */
-    public function validateEmail($attribute, $address = null)
+    public function validateEmail($attribute, $address)
     {
-
-        if ($this->validateEmailFormat($attribute, $address)
-            && !$this->isSameAsMainAddress($attribute, $address)
-            && !$this->isEmailSurveyDuplicate($attribute, $address)) {
-            return true;
+        if (empty($address)) {
+            $address = $this->email_address;
         }
+        if (!empty($address)) {
+            if ($this->validateEmailFormat($attribute, $address)
+                && !$this->isSameAsMainAddress($attribute, $address)
+                && !$this->isEmailSurveyDuplicate($attribute, $address)) {
+                return true;
+            }
+        }
+
         return false;
     }
 
@@ -85,7 +90,7 @@ class Respondent extends MyActiveRecord
      * @param string $address
      * @return bool
      */
-    private function validateEmailFormat($attribute, $address = null)
+    private function validateEmailFormat($attribute, $address)
     {
         $validator = new yii\validators\EmailValidator();
         $validator->checkDNS = static::$checkDSNForEmails;
@@ -101,11 +106,10 @@ class Respondent extends MyActiveRecord
     }
 
     /**
-     * @param string $attribute
      * @param string $address
      * @return bool
      */
-    private function isSameAsMainAddress($attribute, $address = null)
+    private function isSameAsMainAddress($attribute, $address)
     {
         if (empty($address) | $attribute == 'email_address' ) {
             return false;
@@ -114,7 +118,7 @@ class Respondent extends MyActiveRecord
         if ($address === $this->email_address) {
             $this->addError($attribute,
                 Yii::t('app',
-                    'Invalid email address "{0}"', [$address]
+                    'Email address same as main addrress "{0}"', [$address]
                 ) . ' ' . Yii::t('app', 'Reason: {0}', [Yii::t('app', $attribute . ' duplicates main address')])
             );
             return false;
@@ -151,12 +155,19 @@ class Respondent extends MyActiveRecord
     }
 
 
-    public function validatePhoneNumber($attribute, $phone_number = null)
+    public function validatePhoneNumber($attribute, $phone_number)
     {
-        $this->validateSameAsMainNumber($attribute, $phone_number);
-        // TODO
-        $isValidFormat = true;
-        $this->validatePhoneSurveyDuplicate($attribute, $phone_number);
+        if (empty($phone_number)) {
+            $phone_number = $this->phone_number;
+        }
+        if (!empty($phone_number)) {
+            $this->validateSameAsMainNumber($attribute, $phone_number);
+            // TODO
+            $isValidFormat = true;
+            $this->validatePhoneSurveyDuplicate($attribute, $phone_number);
+
+        }
+
     }
 
 
@@ -196,7 +207,7 @@ class Respondent extends MyActiveRecord
      * @param string $number
      * @return null
      */
-    private function validateSameAsMainNumber($attribute, $number = null)
+    private function validateSameAsMainNumber($attribute, $number)
     {
         if (empty($number) | $attribute === 'phone_number') {
             return null;
@@ -241,6 +252,8 @@ class Respondent extends MyActiveRecord
                     'Invalid phone number "{0}"', [$phone_number]
                 ) . ' ' . Yii::t('app', 'Reason: {0}', [Yii::t('app', 'Duplicate phone number')])
             );
+            echo $phone_number;
+            die;
         }
     }
 
@@ -267,15 +280,16 @@ class Respondent extends MyActiveRecord
         ];
 
         $query->andWhere($email_condition, [':email_address' => $email_address, ':email_address2' => '%\"' . $email_address . '\"%']);
+
         if ($query->count() > 0) {
+            $this->addError($attribute,
+                Yii::t('app',
+                    'Invalid email address "{0}"', [$email_address]
+                ) . ' ' . Yii::t('app', 'Reason: {0}', [Yii::t('app', 'Duplicates some other address')])
+            );
             return true;
         }
 
-        $this->addError($attribute,
-            Yii::t('app',
-                'Invalid email address "{0}"', [$email_address]
-            ) . ' ' . Yii::t('app', 'Reason: {0}', [Yii::t('app', 'Duplicates some other address')])
-        );
 
         return false;
     }
