@@ -252,8 +252,6 @@ class Respondent extends MyActiveRecord
                     'Invalid phone number "{0}"', [$phone_number]
                 ) . ' ' . Yii::t('app', 'Reason: {0}', [Yii::t('app', 'Duplicate phone number')])
             );
-            echo $phone_number;
-            die;
         }
     }
 
