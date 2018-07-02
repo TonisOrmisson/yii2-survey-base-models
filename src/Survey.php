@@ -80,8 +80,4 @@ class Survey extends ModelWithHasStatus
         return static::find()->andWhere("key=:key", [":key" => $key])->one();
     }
 
-
-
-
-
 }
