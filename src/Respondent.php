@@ -6,6 +6,7 @@ use andmemasin\myabstract\MyActiveRecord;
 use PascalDeVink\ShortUuid\ShortUuid;
 use Ramsey\Uuid\Uuid;
 use yii;
+use andmemasin\helpers\DateHelper;
 
 /**
  * This is the model class for a generic Respondent.
@@ -18,6 +19,7 @@ use yii;
  * @property string $alternative_email_addresses Inserted as CSV, stored as JSON
  * @property string $phone_number
  * @property string $alternative_phone_numbers Inserted as CSV, stored as JSON
+ * @property string $time_collector_registered
  *
  * @property boolean $isRejected
  * @property string $shortToken If the token is uuid, then short-uuid will be returned
@@ -57,6 +59,7 @@ class Respondent extends MyActiveRecord
             ['phone_number', 'filter', 'filter' => 'strtolower'],
             [['phone_number'], 'string'],
             [['phone_number'], 'validatePhoneNumber'],
+            [['time_collector_registered'], 'string', 'max' => 32],
             [['alternative_phone_numbers'], 'string'],
             [['alternative_phone_numbers'], 'validateMultiplePhoneNumbers'],
             [['token'], 'unique'],
@@ -373,6 +376,19 @@ class Respondent extends MyActiveRecord
             return $shotUuid->encode($uuid);
         }
         return $this->token;
+    }
+
+    /**
+     * TODO move to some factory
+     */
+    public static function setBulkRegistered($tokens, $field = 'time_collector_registered'){
+        $query = new yii\db\Query();
+        $dateHelper = new DateHelper();
+        $query->createCommand()
+            ->update(self::tableName(),
+                [$field=> $dateHelper->getDatetime6()],
+                ['in','token',$tokens]
+            )->execute();
     }
 
 
