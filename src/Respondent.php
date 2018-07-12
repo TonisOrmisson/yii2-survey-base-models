@@ -381,7 +381,8 @@ class Respondent extends MyActiveRecord
     /**
      * TODO move to some factory
      */
-    public static function setBulkRegistered($tokens, $field = 'time_collector_registered'){
+    public function setBulkRegistered($tokens, $field = 'time_collector_registered')
+    {
         $query = new yii\db\Query();
         $dateHelper = new DateHelper();
         $query->createCommand()
