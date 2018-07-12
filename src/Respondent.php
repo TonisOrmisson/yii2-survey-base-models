@@ -392,5 +392,12 @@ class Respondent extends MyActiveRecord
             )->execute();
     }
 
+    /**
+     * @return array
+     */
+    public function getParticipantData(){
+        return [];
+    }
+
 
 }
