@@ -108,6 +108,28 @@ class RespondentTest extends TestBaseActive
         $this->assertFalse($this->model->validateEmail('email_address', $this->model->email_address));
     }
 
+    public function testValidateEmailFailsDuplicateMainAddress() {
+        /** @var Model $model */
+        $this->model = Stub::make($this->modelClass, [
+            'attributes' => array_keys($this->baseModelAttributes()),
+            'isEmailSurveyDuplicate' => false,
+        ]);
+        $this->model->setAttributes($this->baseModelAttributes());
+        $this->model->email_address = "tonis@andmemasin.eu";
+        $this->model->alternative_email_addresses = "tonis@andmemasin.eu";
+        $this->assertFalse($this->model->validateEmail('alternative_email_addresses', $this->model->alternative_email_addresses));
+    }
 
+    public function testValidateEmailPassesDuplicateMainAddress() {
+        /** @var Model $model */
+        $this->model = Stub::make($this->modelClass, [
+            'attributes' => array_keys($this->baseModelAttributes()),
+            'isEmailSurveyDuplicate' => false,
+        ]);
+        $this->model->setAttributes($this->baseModelAttributes());
+        $this->model->email_address = "tonis@andmemasin.eu";
+        $this->model->alternative_email_addresses = "info@andmemasin.eu";
+        $this->assertTrue($this->model->validateEmail('alternative_email_addresses', $this->model->alternative_email_addresses));
+    }
 
 }

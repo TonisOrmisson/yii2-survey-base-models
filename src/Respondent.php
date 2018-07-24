@@ -110,19 +110,18 @@ class Respondent extends MyActiveRecord
      */
     private function isSameAsMainAddress($attribute, $address)
     {
-        if (empty($address) | $attribute == 'email_address' ) {
+        if (empty($address) | $attribute === "email_address") {
             return false;
         }
-
         if ($address === $this->email_address) {
             $this->addError($attribute,
                 Yii::t('app',
                     'Email address same as main addrress "{0}"', [$address]
                 ) . ' ' . Yii::t('app', 'Reason: {0}', [Yii::t('app', $attribute . ' duplicates main address')])
             );
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 
 
