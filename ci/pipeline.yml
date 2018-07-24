@@ -14,7 +14,7 @@ resources:
 - name: source
   type: git
   source:
-    uri: git@bitbucket.org:andmemasin/surveybasemodels.git
+    uri: git@github.com:TonisOrmisson/yii2-survey-base-models.git
     branch: master
     private_key: ((private-key))
 
