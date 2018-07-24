@@ -17,6 +17,7 @@ coverage:
       - src/*
   exclude:
       - src/views/*
+      - src/migrations/*
 modules:
     config:
         Yii2:
