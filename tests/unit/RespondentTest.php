@@ -8,6 +8,7 @@ require_once __DIR__ . '/../TestBaseActive.php';
 use andmemasin\surveybasemodels\Respondent;
 use andmemasin\surveybasemodels\tests\TestBaseActive;
 use Codeception\Stub;
+use Ramsey\Uuid\Uuid;
 use yii\base\Model;
 use yii\helpers\Json;
 
@@ -265,6 +266,17 @@ class RespondentTest extends TestBaseActive
         $this->model->phone_number = "123456789012345678901234567890123";
         $this->model->validate('phone_number');
         $this->assertFalse(empty($this->model->errors));
+    }
+
+    public function testGetShortToken() {
+        $this->goodModel();
+        $this->model->token = "4e52c919-513e-4562-9248-7dd612c6c1ca";
+        $this->assertEquals("fpfyRTmt6XeE9ehEKZ5LwF", $this->model->shortToken);
+    }
+
+    public function testGetShortTokenNoUUID() {
+        $this->goodModel();
+        $this->assertEquals($this->model->token, $this->model->shortToken);
     }
 
     private function goodModel() {
