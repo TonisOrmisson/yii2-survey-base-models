@@ -89,12 +89,8 @@ class RespondentTest extends TestBaseActive
      */
     public function testValidateEmailPasses($address)
     {
+        $this->goodModel();
         $this->model->email_address = $address;
-        /** @var Model $model */
-        $this->model = Stub::make($this->modelClass, [
-            'attributes' => array_keys($this->baseModelAttributes()),
-            'isEmailSurveyDuplicate' => false,
-        ]);
         $this->model->setAttributes($this->baseModelAttributes());
         $this->assertTrue($this->model->validateEmail('email_address', $this->model->email_address));
     }
@@ -116,12 +112,7 @@ class RespondentTest extends TestBaseActive
 
     public function testValidateEmailFailsDuplicateMainAddress()
     {
-        /** @var Model $model */
-        $this->model = Stub::make($this->modelClass, [
-            'attributes' => array_keys($this->baseModelAttributes()),
-            'isEmailSurveyDuplicate' => false,
-        ]);
-        $this->model->setAttributes($this->baseModelAttributes());
+        $this->goodModel();
         $this->model->email_address = "tonis@andmemasin.eu";
         $this->model->alternative_email_addresses = "tonis@andmemasin.eu";
         $this->assertFalse($this->model->validateEmail('alternative_email_addresses', $this->model->alternative_email_addresses));
@@ -129,12 +120,7 @@ class RespondentTest extends TestBaseActive
 
     public function testValidateEmailPassesDuplicateMainAddress()
     {
-        /** @var Model $model */
-        $this->model = Stub::make($this->modelClass, [
-            'attributes' => array_keys($this->baseModelAttributes()),
-            'isEmailSurveyDuplicate' => false,
-        ]);
-        $this->model->setAttributes($this->baseModelAttributes());
+        $this->goodModel();
         $this->model->email_address = "tonis@andmemasin.eu";
         $this->model->alternative_email_addresses = "info@andmemasin.eu";
         $this->assertTrue($this->model->validateEmail('alternative_email_addresses', $this->model->alternative_email_addresses));
@@ -142,12 +128,7 @@ class RespondentTest extends TestBaseActive
 
     public function testValidateEmailPassesMultipleAddress()
     {
-        /** @var Model $model */
-        $this->model = Stub::make($this->modelClass, [
-            'attributes' => array_keys($this->baseModelAttributes()),
-            'isEmailSurveyDuplicate' => false,
-        ]);
-        $this->model->setAttributes($this->baseModelAttributes());
+        $this->goodModel();
         $this->model->email_address = "tonis@andmemasin.eu";
         $this->model->alternative_email_addresses = Json::encode(["one@andmemasin.eu", "two@andmemasin.eu", "three@andmemasin.eu"]);
         $this->model->validateMultipleEmails('alternative_email_addresses');
@@ -156,12 +137,7 @@ class RespondentTest extends TestBaseActive
 
     public function testValidateEmailMultipleAddressesSomeDuplicateFails()
     {
-        /** @var Model $model */
-        $this->model = Stub::make($this->modelClass, [
-            'attributes' => array_keys($this->baseModelAttributes()),
-            'isEmailSurveyDuplicate' => false,
-        ]);
-        $this->model->setAttributes($this->baseModelAttributes());
+        $this->goodModel();
         $this->model->email_address = "tonis@andmemasin.eu";
         $this->model->alternative_email_addresses = Json::encode(["1@andmemasin.eu", "2@andmemasin.eu", "1@andmemasin.eu", "2@andmemasin.eu"]);
         $this->model->validateMultipleEmails('alternative_email_addresses');
@@ -170,12 +146,7 @@ class RespondentTest extends TestBaseActive
 
     public function testValidateEmailMultipleAddressesMaxAmountPasses()
     {
-        /** @var Model $model */
-        $this->model = Stub::make($this->modelClass, [
-            'attributes' => array_keys($this->baseModelAttributes()),
-            'isEmailSurveyDuplicate' => false,
-        ]);
-        $this->model->setAttributes($this->baseModelAttributes());
+        $this->goodModel();
         $this->model->email_address = "tonis@andmemasin.eu";
         $this->model->alternative_email_addresses = Json::encode(["1@andmemasin.eu", "2@andmemasin.eu", "3@andmemasin.eu", "4@andmemasin.eu",
             "5@andmemasin.eu", "6@andmemasin.eu", "7@andmemasin.eu", "8@andmemasin.eu", "9@andmemasin.eu",
@@ -188,12 +159,7 @@ class RespondentTest extends TestBaseActive
 
     public function testValidateEmailMultipleAddressesTooManyFails()
     {
-        /** @var Model $model */
-        $this->model = Stub::make($this->modelClass, [
-            'attributes' => array_keys($this->baseModelAttributes()),
-            'isEmailSurveyDuplicate' => false,
-        ]);
-        $this->model->setAttributes($this->baseModelAttributes());
+        $this->goodModel();
         $this->model->email_address = "tonis@andmemasin.eu";
         $this->model->alternative_email_addresses = Json::encode(["1@andmemasin.eu", "2@andmemasin.eu", "3@andmemasin.eu", "4@andmemasin.eu",
             "5@andmemasin.eu", "6@andmemasin.eu", "7@andmemasin.eu", "8@andmemasin.eu", "9@andmemasin.eu",
@@ -207,4 +173,109 @@ class RespondentTest extends TestBaseActive
     public function testGetParticipantDat() {
         $this->assertInternalType('array', $this->model->getParticipantData());
     }
+
+
+    public function testValidatePhoneNumbers()
+    {
+        $this->goodModel();
+        $this->model->phone_number = "12345677";
+        $this->model->alternative_phone_numbers = null;
+        $this->model->validateMultiplePhoneNumbers('alternative_phone_numbers');
+        $this->assertTrue(empty($this->model->errors));
+    }
+
+    public function testValidatePhoneNumbersMaxAmountPasses()
+    {
+        $this->goodModel();
+        $this->model->phone_number = "12345677";
+        $this->model->alternative_phone_numbers = Json::encode(["123456 1", "123456 2", "123456 3", "123456 4",
+            "123456 5", "123456 6", "123456 7", "123456 8", "123456 9", "123456 10", "123456 11", "123456 12",
+            "123456 13", "123456 14", "123456 15", "123456 16", "123456 17", "123456 18", "123456 19",
+            "123456 20"]);
+        $this->model->validateMultiplePhoneNumbers('alternative_phone_numbers');
+        $this->assertTrue(empty($this->model->errors));
+    }
+
+    public function testValidatePhoneNumbersOverMaxAmountFails()
+    {
+        $this->goodModel();
+        $this->model->phone_number = "12345677";
+        $this->model->alternative_phone_numbers = Json::encode(["123456 1", "123456 2", "123456 3", "123456 4",
+            "123456 5", "123456 6", "123456 7", "123456 8", "123456 9", "123456 10", "123456 11", "123456 12",
+            "123456 13", "123456 14", "123456 15", "123456 16", "123456 17", "123456 18", "123456 19",
+            "123456 20", "123456 21"]);
+        $this->model->validateMultiplePhoneNumbers('alternative_phone_numbers');
+        $this->assertFalse(empty($this->model->errors));
+    }
+
+    public function testValidatePhoneNumbersInternalDuplicatesFails()
+    {
+        $this->goodModel();
+        $this->model->phone_number = "12345677";
+        $this->model->alternative_phone_numbers = Json::encode(["123456 1", "123456 2", "123456 1", "123456 2"]);
+        $this->model->validateMultiplePhoneNumbers('alternative_phone_numbers');
+        $this->assertFalse(empty($this->model->errors));
+    }
+
+    public function testValidatePhoneNumbersSameAsMainNumberFails()
+    {
+        $this->goodModel();
+        $this->model->phone_number = "12345677";
+        $this->model->alternative_phone_numbers = Json::encode(["12345677", "123456 2", "123456 1", "123456 2"]);
+        $this->model->validateMultiplePhoneNumbers('alternative_phone_numbers');
+        $this->assertFalse(empty($this->model->errors));
+    }
+
+    public function testValidatePhoneNumbersNoAlternativesPasses()
+    {
+        $this->goodModel();
+        $this->model->phone_number = "12345677";
+        $this->model->alternative_phone_numbers = null;
+        $this->model->validateMultiplePhoneNumbers('alternative_phone_numbers');
+        $this->assertTrue(empty($this->model->errors));
+    }
+
+    public function testValidatePhoneNumberTooShortFails()
+    {
+        $this->goodModel();
+        $this->model->phone_number = "12";
+        $this->model->validate('phone_number');
+        $this->assertFalse(empty($this->model->errors));
+    }
+
+    public function testValidatePhoneNumberMinShortPasses()
+    {
+        $this->goodModel();
+        $this->model->phone_number = "1234";
+        $this->model->validate('phone_number');
+        $this->assertTrue(empty($this->model->errors));
+    }
+
+    public function testValidatePhoneNumberMaxLongPasses()
+    {
+        $this->goodModel();
+        $this->model->phone_number = "12345678901234567890123456789012";
+        $this->model->validate('phone_number');
+        $this->assertTrue(empty($this->model->errors));
+    }
+
+    public function testValidatePhoneNumberTooLongFails()
+    {
+        $this->goodModel();
+        $this->model->phone_number = "123456789012345678901234567890123";
+        $this->model->validate('phone_number');
+        $this->assertFalse(empty($this->model->errors));
+    }
+
+    private function goodModel() {
+        $this->model = Stub::make($this->modelClass, [
+            'attributes' => array_keys($this->baseModelAttributes()),
+            'isEmailSurveyDuplicate' => false,
+            'validatePhoneSurveyDuplicate' => null,
+        ]);
+        $this->model->setAttributes($this->baseModelAttributes());
+
+    }
+
+
 }

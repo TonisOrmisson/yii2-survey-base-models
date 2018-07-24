@@ -27,6 +27,7 @@ use andmemasin\helpers\DateHelper;
 class Respondent extends MyActiveRecord
 {
     const MAX_ALTERNATIVE_CONTACTS = 20;
+
     /** @var bool $checkDSNForEmails whether email validation also used DSN records to check if domain exists */
     public static $checkDSNForEmails = true;
 
@@ -54,7 +55,7 @@ class Respondent extends MyActiveRecord
             [['email_address', 'phone_number'], 'filter', 'filter' => 'strtolower'],
             [['alternative_email_addresses'], 'string'],
             [['alternative_email_addresses'], 'validateMultipleEmails'],
-            [['phone_number'], 'string'],
+            [['phone_number'], 'string', 'length' => [4, 32]],
             [['phone_number'], 'validatePhoneNumber'],
             [['time_collector_registered'], 'string', 'max' => 32],
             [['alternative_phone_numbers'], 'string'],
@@ -181,7 +182,7 @@ class Respondent extends MyActiveRecord
                 $item = strtolower(trim($item));
                 $this->validateAlternativePhoneNumberInternalDuplicates($attribute, $item, $key);
 
-                if ($i >= static::MAX_ALTERNATIVE_CONTACTS) {
+                if ($i > static::MAX_ALTERNATIVE_CONTACTS) {
                     $this->addError($attribute, Yii::t('app', 'Maximum alternative phone numbers limit ({0}) reached for {1}', [static::MAX_ALTERNATIVE_CONTACTS, $this->phone_number]));
                 }
                $this->validatePhoneNumber($attribute, $item);
@@ -227,8 +228,9 @@ class Respondent extends MyActiveRecord
      * @param string $attribute
      * @param string $phone_number Phone number to check duplicates for
      */
-    private function validatePhoneSurveyDuplicate($attribute, $phone_number)
+    protected function validatePhoneSurveyDuplicate($attribute, $phone_number)
     {
+
         $query = static::find();
         // check only this survey
         $query->andWhere(['survey_id' => $this->survey_id]);
