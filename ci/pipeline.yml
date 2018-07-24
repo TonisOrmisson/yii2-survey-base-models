@@ -16,7 +16,6 @@ resources:
   source:
     uri: git@github.com:TonisOrmisson/yii2-survey-base-models.git
     branch: master
-    private_key: ((private-key))
 
 jobs:
   - name: run-tests
