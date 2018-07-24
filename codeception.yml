@@ -1,0 +1,23 @@
+namespace: andmemasin\surveybasemodels
+
+paths:
+    tests: tests
+    output: tests/_output
+    data: tests/_data
+    support: tests/_support
+    envs: tests/_envs
+actor_suffix: Tester
+settings:
+  bootstrap: _bootstrap.php
+  colors: true
+coverage:
+  enabled: true
+  remote: false
+  include:
+      - src/*
+  exclude:
+      - src/views/*
+modules:
+    config:
+        Yii2:
+          configFile: 'tests/_config/test.php'

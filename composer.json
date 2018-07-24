@@ -28,9 +28,16 @@
     "pascaldevink/shortuuid":"~2",
 
     "andmemasin/survey": "~0.6.0",
-    "andmemasin/yii2-myabstract": "~2.5"
+    "andmemasin/yii2-myabstract": "~2.5.5"
 
   },
+  "require-dev": {
+    "yiisoft/yii2-faker": "~2.0.0",
+    "codeception/codeception": "^2.2.3",
+    "codeception/verify": "~0.3.1",
+    "codeception/specify": "~0.4.3"
+  },
+
 
   "extra": {
     "branch-alias": {
