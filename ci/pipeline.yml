@@ -1,0 +1,66 @@
+resource_types:
+- name: slack-notification
+  type: docker-image
+  source:
+    repository: cfcommunity/slack-notification-resource
+
+resources:
+
+- name: notify
+  type: slack-notification
+  source:
+    url: https://hooks.slack.com/services/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
+
+- name: source
+  type: git
+  source:
+    uri: git@bitbucket.org:andmemasin/surveybasemodels.git
+    branch: master
+    private_key: ((private-key))
+
+jobs:
+  - name: run-tests
+    plan:
+      - aggregate:
+
+        - get: source
+          params: {depth: 1}
+          trigger: true
+
+
+      - task: Run tests
+        on_failure:
+          put: notify
+          params:
+            attachments: '[{"color": "danger","text": "Build $BUILD_NAME failed!"}]'
+        on_abort:
+          put: notify
+          params:
+            attachments: '[{"color": "warning","text": "Build $BUILD_NAME was aborted!"}]'
+        on_success:
+          put: notify
+          params:
+            attachments: '[{"color": "good","text": "Build $BUILD_NAME was successful!"}]'
+        privileged: true
+        config:
+          platform: linux
+          caches:
+            - path: ../../../root/.composer/cache
+            - path: ../../../var/lib/docker
+          image_resource:
+            type: docker-image
+            source:
+              repository: tonisormisson/dev-lemp
+          inputs:
+            - name: source
+          run:
+            path: sh
+            args:
+              - -exc
+              - |
+                cd source
+                compser install --no-interaction
+                php vendor/bin/codecept run --coverage --coverage-xml
+
+
+
