@@ -50,7 +50,8 @@ class Respondent extends MyActiveRecord
             [['survey_id', 'token'], 'required'],
             [['survey_id'], 'integer'],
             [['email_address'], 'validateEmail'],
-            [['email_address', 'phone_number'], 'filter', 'filter' => ['trim', 'strtolower']],
+            [['email_address', 'phone_number'], 'filter', 'filter' => 'trim'],
+            [['email_address', 'phone_number'], 'filter', 'filter' => 'strtolower'],
             [['alternative_email_addresses'], 'string'],
             [['alternative_email_addresses'], 'validateMultipleEmails'],
             [['phone_number'], 'string'],
@@ -140,7 +141,7 @@ class Respondent extends MyActiveRecord
                     $this->addError($attribute, Yii::t('app', 'Duplicate email in alternative email addresses'));
                 }
 
-                if ($i >= static::MAX_ALTERNATIVE_CONTACTS) {
+                if ($i > static::MAX_ALTERNATIVE_CONTACTS) {
                     $this->addError($attribute, Yii::t('app', 'Maximum alternative addresses limit ({0}) reached for {1}', [static::MAX_ALTERNATIVE_CONTACTS, $this->email_address]));
                 }
                 $address = strtolower(trim($address));
