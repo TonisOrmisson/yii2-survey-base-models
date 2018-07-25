@@ -58,11 +58,7 @@ class Rejection extends MyActiveRecord
      * @return bool
      */
     public static function hasBouncedHard($email_address){
-        $rejection = Rejection::findByEmail($email_address);
-        if($rejection){
-            return true;
-        }
-        return false;
+        return (!empty(self::findHardBounces($email_address)));
     }
 
 
@@ -73,8 +69,7 @@ class Rejection extends MyActiveRecord
      */
     public static function findHardBounces($email_address){
         return Rejection::find()
-            ->andWhere(['email_address'=>$email_address])
-
+            ->andWhere(['email_address'=>$email_address, 'type' => self::BOUNCE_TYPE_HARD])
             ->all();
     }
 

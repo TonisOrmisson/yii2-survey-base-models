@@ -216,4 +216,6 @@ ALTER TABLE `rejection`
   ADD CONSTRAINT `fk_rejection_survey_id` FOREIGN KEY (`survey_id`) REFERENCES `survey` (`survey_id`);
 COMMIT;
 
-INSERT INTO `rejection` (`rejection_id`, `survey_id`, `respondent_id`, `email_address`, `type`, `bounce`, `time_rejected`) VALUES ('1', '1', '1', 'me@example.com', 'complaint', NULL, '2018-07-25 00:00:00')
+INSERT INTO `rejection` (`rejection_id`, `survey_id`, `respondent_id`, `email_address`, `type`, `bounce`, `time_rejected`) VALUES ('1', '1', '1', 'me@example.com', 'complaint', NULL, '2018-07-25 00:00:00');
+INSERT INTO `rejection` (`rejection_id`, `survey_id`, `respondent_id`, `email_address`, `type`, `bounce`, `time_rejected`) VALUES ('2', '1', '1', 'me2@example.com', 'hard', NULL, '2018-07-25 00:00:00');
+INSERT INTO `rejection` (`rejection_id`, `survey_id`, `respondent_id`, `email_address`, `type`, `bounce`, `time_rejected`) VALUES ('3', '1', '1', 'me3@example.com', 'hard', NULL, '2018-07-25 00:00:00');
