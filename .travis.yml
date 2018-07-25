@@ -4,7 +4,8 @@ dist: trusty
 php:
   - 7.2
   - 7.1
-
+before_install:
+  - mysql -e 'CREATE DATABASE IF NOT EXISTS test;'
 script:
   - composer install
   - cp tests/_config/params-example.php tests/_config/params.php

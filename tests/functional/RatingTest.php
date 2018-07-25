@@ -1,6 +1,6 @@
 <?php
 
-namespace andmemasin\collector\tests\functional;
+namespace andmemasin\surveybasemodels\tests\functional;
 
 
 use andmemasin\surveybasemodels\Rating;

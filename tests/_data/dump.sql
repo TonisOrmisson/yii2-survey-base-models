@@ -77,6 +77,8 @@ ALTER TABLE `survey`
 
 
 
+INSERT INTO `survey` (`survey_id`, `key`, `name`, `options`, `status`, `user_created`, `user_updated`, `user_closed`, `time_created`, `time_updated`, `time_closed`) VALUES ('1', '7507f1dc-8854-4b33-8860-87600b46aad3', 'tes5t-survey', '{}', 'active', '1', '1', NULL, '2018-07-25 00:00:00', '2018-07-25 00:00:00', '3000-12-31 00:00:00.000000');
+COMMIT;
 
 CREATE TABLE `survey_has_status` (
   `survey_has_status_id` int(11) NOT NULL COMMENT 'ID',
@@ -187,7 +189,6 @@ COMMIT;
 CREATE TABLE `rejection` (
   `rejection_id` int(11) NOT NULL COMMENT 'ID',
   `survey_id` int(11) DEFAULT NULL COMMENT 'Survey',
-  `email_id` int(11) DEFAULT NULL COMMENT 'Email',
   `respondent_id` int(11) DEFAULT NULL COMMENT 'Respondent',
   `email_address` varchar(255) NOT NULL COMMENT 'email address to send email to',
   `type` varchar(45) DEFAULT NULL COMMENT 'Bounce type',
@@ -204,7 +205,6 @@ CREATE TABLE `rejection` (
 ALTER TABLE `rejection`
   ADD PRIMARY KEY (`rejection_id`),
   ADD KEY `fk_rejection_survey_id` (`survey_id`),
-  ADD KEY `fk_rejection_email_id` (`email_id`),
   ADD KEY `fk_rejection_respondent_id` (`respondent_id`),
   ADD KEY `ix_email_address` (`email_address`);
 
@@ -212,7 +212,8 @@ ALTER TABLE `rejection`
   MODIFY `rejection_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID';
 
 ALTER TABLE `rejection`
-  ADD CONSTRAINT `fk_rejection_email_id` FOREIGN KEY (`email_id`) REFERENCES `email` (`email_id`),
   ADD CONSTRAINT `fk_rejection_respondent_id` FOREIGN KEY (`respondent_id`) REFERENCES `respondent` (`respondent_id`),
   ADD CONSTRAINT `fk_rejection_survey_id` FOREIGN KEY (`survey_id`) REFERENCES `survey` (`survey_id`);
 COMMIT;
+
+INSERT INTO `rejection` (`rejection_id`, `survey_id`, `respondent_id`, `email_address`, `type`, `bounce`, `time_rejected`) VALUES ('1', '1', '1', 'me@example.com', 'complaint', NULL, '2018-07-25 00:00:00')
