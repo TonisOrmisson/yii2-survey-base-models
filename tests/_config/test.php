@@ -18,6 +18,7 @@ $config = [
         ],
     ],
     'components' => [
+        'db' =>   require(__DIR__ . '/db.php'),
         'request' => [
             'cookieValidationKey' => 'i-am-test',
         ],

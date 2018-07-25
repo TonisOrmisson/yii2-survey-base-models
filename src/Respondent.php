@@ -14,7 +14,6 @@ use andmemasin\helpers\DateHelper;
  * @property int $respondent_id
  * @property int $survey_id
  * @property string $token
- * @property Survey $survey
  * @property string $email_address
  * @property string $alternative_email_addresses Inserted as CSV, stored as JSON
  * @property string $phone_number
@@ -23,6 +22,7 @@ use andmemasin\helpers\DateHelper;
  *
  * @property boolean $isRejected
  * @property string $shortToken If the token is uuid, then short-uuid will be returned
+ * @property Survey $survey
  */
 class Respondent extends MyActiveRecord
 {

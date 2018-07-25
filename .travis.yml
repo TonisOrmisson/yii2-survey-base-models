@@ -7,6 +7,7 @@ php:
 
 script:
   - composer install
+  - cp tests/_config/params-example.php tests/_config/params.php
   - php vendor/bin/codecept run --coverage --coverage-xml
 after_success:
   - bash <(curl -s https://codecov.io/bash)

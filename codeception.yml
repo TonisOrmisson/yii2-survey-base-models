@@ -18,6 +18,9 @@ coverage:
   exclude:
       - src/views/*
       - src/migrations/*
+params:
+  - env
+  - tests/_config/params.php
 modules:
     config:
         Yii2:
