@@ -22,6 +22,11 @@ $config = [
         'request' => [
             'cookieValidationKey' => 'i-am-test',
         ],
+        'user' => [
+            'identityClass' => \andmemasin\surveybasemodels\Helper\User::class,
+            'enableAutoLogin' => true,
+        ],
+
     ],
 ];
 
