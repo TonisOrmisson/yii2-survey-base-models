@@ -358,7 +358,7 @@ class Respondent extends MyActiveRecord
         /** @var static $model */
         $model = static::find()
             ->andWhere(['email_address' => $email_address])
-            ->orderBy([static::primaryKey()[0] => SORT_DESC])
+            ->orderBy([(new static)->primaryKeySingle() => SORT_DESC])
             ->one();
         return $model;
     }
@@ -378,12 +378,13 @@ class Respondent extends MyActiveRecord
 
     /**
      * TODO move to some factory
+     * @return integer
      */
     public function setBulkRegistered($tokens, $field = 'time_collector_registered')
     {
         $query = new yii\db\Query();
         $dateHelper = new DateHelper();
-        $query->createCommand()
+        return $query->createCommand()
             ->update(self::tableName(),
                 [$field=> $dateHelper->getDatetime6()],
                 ['in','token',$tokens]
