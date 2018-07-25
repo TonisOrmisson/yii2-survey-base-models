@@ -77,7 +77,9 @@ class Survey extends ModelWithHasStatus
      */
     public static function findByKey($key)
     {
-        return static::find()->andWhere("key=:key", [":key" => $key])->one();
+        // key is a protected keyword so we need to quote it properly
+        $colName = Yii::$app->db->schema->quoteColumnName("key");
+        return static::find()->andWhere($colName . "=:key", [":key" => $key])->one();
     }
 
 }

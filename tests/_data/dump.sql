@@ -77,7 +77,8 @@ ALTER TABLE `survey`
 
 
 
-INSERT INTO `survey` (`survey_id`, `key`, `name`, `options`, `status`, `user_created`, `user_updated`, `user_closed`, `time_created`, `time_updated`, `time_closed`) VALUES ('1', '7507f1dc-8854-4b33-8860-87600b46aad3', 'tes5t-survey', '{}', 'active', '1', '1', NULL, '2018-07-25 00:00:00', '2018-07-25 00:00:00', '3000-12-31 00:00:00.000000');
+INSERT INTO `survey` (`survey_id`, `key`, `name`, `options`, `status`, `user_created`, `user_updated`, `user_closed`, `time_created`, `time_updated`, `time_closed`) VALUES
+ ('1', '7507f1dc-8854-4b33-8860-87600b46aad3', 'tes5t-survey', '{}', 'active', '1', '1', NULL, '2018-07-25 00:00:00', '2018-07-25 00:00:00', '3000-12-31 00:00:00.000000');
 COMMIT;
 
 CREATE TABLE `survey_has_status` (
