@@ -29,7 +29,7 @@ class Respondent extends MyActiveRecord
     const MAX_ALTERNATIVE_CONTACTS = 20;
 
     /** @var bool $checkDSNForEmails whether email validation also used DSN records to check if domain exists */
-    public static $checkDSNForEmails = true;
+    public static $checkDSNForEmails = false;
 
     /**
      * @var array $surveyIdentifyingColumns names of the columns that identify a respondent as unique inside a survey
