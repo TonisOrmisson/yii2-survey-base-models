@@ -18,6 +18,7 @@ use yii;
  * @property Survey $survey
  * @property \stdClass $bounceObject The bounce as object
  * @property string $bounceReason
+ * @property string $bounceReplyCode
  */
 class Rejection extends MyActiveRecord
 {
@@ -154,11 +155,30 @@ class Rejection extends MyActiveRecord
         return null;
     }
 
+    /**
+     * @return null|string
+     */
     public function getBounceReason()
     {
         if (!empty($this->bounceObject)) {
             if(isset($this->bounceObject->diagnosticcode)) {
                 return $this->bounceObject->diagnosticcode;
+            }
+            if(isset($this->bounceObject->reason)) {
+                return $this->bounceObject->reason;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getBounceReplyCode()
+    {
+        if (!empty($this->bounceObject)) {
+            if(isset($this->bounceObject->deliverystatus)) {
+                return $this->bounceObject->deliverystatus;
             }
         }
         return null;
