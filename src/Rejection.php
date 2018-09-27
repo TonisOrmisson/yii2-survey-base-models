@@ -16,6 +16,8 @@ use yii;
  *
  * @property Respondent $respondent
  * @property Survey $survey
+ * @property \stdClass $bounceObject The bounce as object
+ * @property string $bounceReason
  */
 class Rejection extends MyActiveRecord
 {
@@ -141,5 +143,24 @@ class Rejection extends MyActiveRecord
             self::BOUNCE_TYPE_ANSWERED => Yii::t('app','Respondent has answered already'),
             self::BOUNCE_TYPE_OTHER => Yii::t('app','Other'),
         ];
+    }
+
+    public function getBounceObject()
+    {
+        $object = json_decode($this->bounce);
+        if (!empty($object)) {
+            return $object;
+        }
+        return null;
+    }
+
+    public function getBounceReason()
+    {
+        if (!empty($this->bounceObject)) {
+            if(isset($this->bounceObject->diagnosticcode)) {
+                return $this->bounceObject->diagnosticcode;
+            }
+        }
+        return null;
     }
 }
