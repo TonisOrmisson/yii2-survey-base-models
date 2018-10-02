@@ -118,7 +118,7 @@ class Respondent extends MyActiveRecord
         if ($address === $this->email_address) {
             $this->addError($attribute,
                 Yii::t('app',
-                    'Email address same as main addrress "{0}"', [$address]
+                    'Email address same as main address "{0}"', [$address]
                 ) . ' ' . Yii::t('app', 'Reason: {0}', [Yii::t('app', $attribute . ' duplicates main address')])
             );
             return true;
@@ -134,20 +134,22 @@ class Respondent extends MyActiveRecord
         if (!empty($addresses)) {
             $i = 0;
             foreach ($addresses as $key => $address) {
-                $i++;
-                // check the alternative numbers of that model for duplicates
-                $checkItems = $addresses;
-                unset($checkItems[$key]);
-                if (in_array($address, $checkItems)) {
-                    $this->addError($attribute, Yii::t('app', 'Duplicate email in alternative email addresses'));
-                }
+                if (!empty($address)) {
+                    $i++;
+                    // check the alternative numbers of that model for duplicates
+                    $checkItems = $addresses;
+                    unset($checkItems[$key]);
+                    if (in_array($address, $checkItems)) {
+                        $this->addError($attribute, Yii::t('app', 'Duplicate email in alternative email addresses'));
+                    }
 
-                if ($i > static::MAX_ALTERNATIVE_CONTACTS) {
-                    $this->addError($attribute, Yii::t('app', 'Maximum alternative addresses limit ({0}) reached for {1}', [static::MAX_ALTERNATIVE_CONTACTS, $this->email_address]));
-                }
-                $address = strtolower(trim($address));
-                if ($this->validateEmail($attribute, $address)) {
-                    $cleanAddresses[] = $address;
+                    if ($i > static::MAX_ALTERNATIVE_CONTACTS) {
+                        $this->addError($attribute, Yii::t('app', 'Maximum alternative addresses limit ({0}) reached for {1}', [static::MAX_ALTERNATIVE_CONTACTS, $this->email_address]));
+                    }
+                    $address = strtolower(trim($address));
+                    if ($this->validateEmail($attribute, $address)) {
+                        $cleanAddresses[] = $address;
+                    }
                 }
             }
         }
@@ -162,7 +164,7 @@ class Respondent extends MyActiveRecord
         }
         if (!empty($phone_number)) {
             $this->validateSameAsMainNumber($attribute, $phone_number);
-            // TODO
+            // FIXME
             $isValidFormat = true;
             $this->validatePhoneSurveyDuplicate($attribute, $phone_number);
 
