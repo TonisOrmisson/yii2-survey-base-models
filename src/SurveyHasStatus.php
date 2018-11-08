@@ -16,7 +16,7 @@ use andmemasin\survey\Status;
 class SurveyHasStatus extends HasStatusModel
 {
     /** @var string */
-    public static $statusModelClass = Status::class;
+    public $statusModelClass = Status::class;
 
     /**
      * {@inheritdoc}

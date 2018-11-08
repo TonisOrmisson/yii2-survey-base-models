@@ -23,7 +23,7 @@ use yii;
 class Survey extends ModelWithHasStatus
 {
     public static $hasStatusClassName = SurveyHasStatus::class;
-    public static $statusModelClass = Status::class;
+    public $statusModelClass = Status::class;
 
 
     /**
