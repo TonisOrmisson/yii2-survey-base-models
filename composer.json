@@ -27,8 +27,8 @@
     "yiisoft/yii2": "~2.0.14",
     "pascaldevink/shortuuid":"~2",
 
-    "andmemasin/survey": "^1.0.0",
-    "andmemasin/yii2-myabstract": "^2.5.15"
+    "andmemasin/survey": "^1.1.0",
+    "andmemasin/yii2-myabstract": "^2.6.0"
 
   },
   "require-dev": {
