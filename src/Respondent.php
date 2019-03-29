@@ -60,7 +60,8 @@ class Respondent extends MyActiveRecord
             [['time_collector_registered'], 'string', 'max' => 32],
             [['alternative_phone_numbers'], 'string'],
             [['alternative_phone_numbers'], 'validateMultiplePhoneNumbers'],
-            [['token'], 'unique'],
+            [['token', 'key'], 'unique'],
+            [['key'], 'string', 'max' => 32],
         ], parent::rules());
     }
 
