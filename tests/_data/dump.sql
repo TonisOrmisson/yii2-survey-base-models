@@ -113,6 +113,7 @@ COMMIT;
 
 CREATE TABLE `respondent` (
   `respondent_id` int(11) NOT NULL COMMENT 'ID',
+  `key` varchar(32) DEFAULT NULL,
   `survey_id` int(11) DEFAULT NULL COMMENT 'Survey',
   `token` varchar(128) DEFAULT NULL COMMENT 'Token',
   `email_address` varchar(255) DEFAULT NULL COMMENT 'email address to send email to',
@@ -134,6 +135,7 @@ CREATE TABLE `respondent` (
 ALTER TABLE `respondent`
   ADD PRIMARY KEY (`respondent_id`),
   ADD UNIQUE KEY `token` (`token`),
+  ADD UNIQUE KEY `key` (`key`),
   ADD KEY `fk_respondent_survey_id` (`survey_id`),
   ADD KEY `ix_token` (`token`),
   ADD KEY `ix_email_address` (`email_address`),
@@ -146,12 +148,10 @@ ALTER TABLE `respondent`
 ALTER TABLE `respondent`
   ADD CONSTRAINT `fk_respondent_survey_id` FOREIGN KEY (`survey_id`) REFERENCES `survey` (`survey_id`);
 
-INSERT INTO `respondent` (`respondent_id`, `survey_id`, `token`, `email_address`, `alternative_email_addresses`, `phone_number`, `alternative_phone_numbers`,  `time_collector_registered`, `user_created`, `user_updated`, `user_closed`, `time_created`, `time_updated`, `time_closed`) VALUES
-(1, 1, 'c9723dcc-daed-4078-b373-cbe173c03740', 'tonis@andmemasin.eu', NULL, '1234567 1', NULL, null, 1, 1, NULL, '2018-05-17 13:34:27', '2018-05-17 13:34:27', '3000-12-31 00:00:00');
-INSERT INTO `respondent` (`respondent_id`, `survey_id`, `token`, `email_address`, `alternative_email_addresses`, `phone_number`, `alternative_phone_numbers`,  `time_collector_registered`, `user_created`, `user_updated`, `user_closed`, `time_created`, `time_updated`, `time_closed`) VALUES
-(2, 1, 'df56bf0a-c9b4-4cc2-8458-d17e22a0863d', 'rejected@example.com', NULL, '1234567 2', NULL, null, 1, 1, NULL, '2018-05-17 13:34:27', '2018-05-17 13:34:27', '3000-12-31 00:00:00');
-INSERT INTO `respondent` (`respondent_id`, `survey_id`, `token`, `email_address`, `alternative_email_addresses`, `phone_number`, `alternative_phone_numbers`,  `time_collector_registered`, `user_created`, `user_updated`, `user_closed`, `time_created`, `time_updated`, `time_closed`) VALUES
-(3, 1, 'a1b24b34-4a21-4c4a-a6e0-09d2ae48c949', 'not-rejected@example.com', NULL, '1234567 3', NULL, null, 1, 1, NULL, '2018-05-17 13:34:27', '2018-05-17 13:34:27', '3000-12-31 00:00:00');
+INSERT INTO `respondent` (`respondent_id`,`key`, `survey_id`, `token`, `email_address`, `alternative_email_addresses`, `phone_number`, `alternative_phone_numbers`,  `time_collector_registered`, `user_created`, `user_updated`, `user_closed`, `time_created`, `time_updated`, `time_closed`) VALUES
+(1, 'yks', 1, 'c9723dcc-daed-4078-b373-cbe173c03740', 'tonis@andmemasin.eu', NULL, '1234567 1', NULL, null, 1, 1, NULL, '2018-05-17 13:34:27', '2018-05-17 13:34:27', '3000-12-31 00:00:00'),
+(2, 'kaks', 1, 'df56bf0a-c9b4-4cc2-8458-d17e22a0863d', 'rejected@example.com', NULL, '1234567 2', NULL, null, 1, 1, NULL, '2018-05-17 13:34:27', '2018-05-17 13:34:27', '3000-12-31 00:00:00'),
+(3, 'kolm', 1, 'a1b24b34-4a21-4c4a-a6e0-09d2ae48c949', 'not-rejected@example.com', NULL, '1234567 3', NULL, null, 1, 1, NULL, '2018-05-17 13:34:27', '2018-05-17 13:34:27', '3000-12-31 00:00:00');
 COMMIT;
 
 

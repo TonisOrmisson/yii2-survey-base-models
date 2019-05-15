@@ -3,10 +3,8 @@
 namespace andmemasin\surveybasemodels\tests\functional;
 
 
-use andmemasin\surveybasemodels\Rating;
 use andmemasin\surveybasemodels\Respondent;
 use Codeception\Test\Unit;
-use Yii;
 
 
 class RespondentTest extends Unit

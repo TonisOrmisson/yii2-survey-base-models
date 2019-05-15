@@ -14,6 +14,7 @@ use andmemasin\helpers\DateHelper;
  * @property int $respondent_id
  * @property int $survey_id
  * @property string $token
+ * @property string $key
  * @property string $email_address
  * @property string $alternative_email_addresses Inserted as CSV, stored as JSON
  * @property string $phone_number

@@ -30,6 +30,7 @@ class RespondentTest extends TestBaseActive
     {
         return array_merge([
             'respondent_id' => 1,
+            'key' => 'yks',
             'survey_id' => 1,
             'token' => 'test-token',
             'email_address' => "tonis@andmemasin.eu",
