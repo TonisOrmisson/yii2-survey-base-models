@@ -44,7 +44,7 @@ class Rejection extends MyActiveRecord
     {
         return array_merge([
             [['survey_id', 'respondent_id'], 'integer'],
-            [['email_address','time_rejected'], 'required'],
+            [['time_rejected'], 'required'],
             [['bounce'], 'string'],
             [['time_rejected'], 'safe'],
             [['email_address'], 'string', 'max' => 255],
