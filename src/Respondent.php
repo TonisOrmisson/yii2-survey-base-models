@@ -335,7 +335,7 @@ class Respondent extends MyActiveRecord
     }
 
     /**
-     * Check whether respondent has rejected this specific survey or has a hard bounce on e_mail address
+     * Check whether respondent has rejected this specific survey or has a hard bounce on e-mail address
      * @return bool
      */
     public function getIsRejected()
