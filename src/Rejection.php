@@ -1,6 +1,7 @@
 <?php
 
 namespace andmemasin\surveybasemodels;
+use andmemasin\myabstract\ActiveRecord;
 use andmemasin\myabstract\MyActiveRecord;
 use yii;
 
@@ -27,6 +28,9 @@ class Rejection extends MyActiveRecord
     const BOUNCE_TYPE_COMPLAINT = 'complaint';
     const BOUNCE_TYPE_ANSWERED = 'answered';
     const BOUNCE_TYPE_OTHER = 'other';
+
+    /** @var string  */
+    protected $respondentClass = Respondent::class;
 
     /**
      * {@inheritdoc}
@@ -133,7 +137,7 @@ class Rejection extends MyActiveRecord
      */
     public function getRespondent()
     {
-        return $this->hasOne(Respondent::class, ['respondent_id' => 'respondent_id']);
+        return $this->hasOne($this->respondentClass, ['respondent_id' => 'respondent_id']);
     }
 
     public static function getBounceTypes(){
