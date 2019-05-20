@@ -362,7 +362,7 @@ class Respondent extends MyActiveRecord
         $rejections = \andmemasin\sampling\models\Rejection::find()
             ->andWhere(['respondent_id'=>$this->primaryKey])
             // only rejections, not bounces
-            ->andWhere(['not', 'bounce', null]);
+            ->andWhere(['not', ['bounce'=> null]]);
         return $rejections->count() > 0;
     }
 
