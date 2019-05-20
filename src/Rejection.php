@@ -82,21 +82,24 @@ class Rejection extends MyActiveRecord
 
 
     /**
-     * Check whether there are rejections that match the respondent's token
+     * Check whether there are rejections that match the respondent's token. This check does not check bounced e-mails
      * @param string $code
      * @return bool
+     * @deprecated
      */
     public static function rejectedByCode($code){
         $respondent = Respondent::findByToken($code);
-        if($respondent){
-            $rejections = self::find()
-                ->andWhere(['respondent_id'=>$respondent->primaryKey])
-                ->all();
-            if($rejections){
-                return true;
-            }
+        if (empty($respondent)) {
+            Yii::error("Looking for a rejection for code $code, but no respondent found", __METHOD__);
+            return false;
         }
-        return false;
+
+        $rejections = self::find()
+            ->andWhere(['respondent_id'=>$respondent->primaryKey])
+            // only rejections, not bounces
+            ->andWhere(['not', 'bounce', null]);
+
+        return $rejections->count() > 0;
     }
 
     /**

@@ -22,6 +22,7 @@ use andmemasin\helpers\DateHelper;
  * @property string $time_collector_registered
  *
  * @property boolean $isRejected
+ * @property boolean $isRejectedByClick
  * @property string $shortToken If the token is uuid, then short-uuid will be returned
  * @property Survey $survey
  */
@@ -341,7 +342,7 @@ class Respondent extends MyActiveRecord
      */
     public function getIsRejected()
     {
-        if (Rejection::rejectedByCode($this->token)) {
+        if ($this->isRejectedByClick) {
             return true;
         }
 
@@ -350,6 +351,19 @@ class Respondent extends MyActiveRecord
         }
 
         return false;
+    }
+
+    /**
+     * Check whether there are rejections for this respondnent that have clicked on reject link. This check does not check bounced e-mails
+     * @return bool
+     */
+    public function getIsRejectedByClick()
+    {
+        $rejections = \andmemasin\sampling\models\Rejection::find()
+            ->andWhere(['respondent_id'=>$this->primaryKey])
+            // only rejections, not bounces
+            ->andWhere(['not', 'bounce', null]);
+        return $rejections->count() > 0;
     }
 
     /**
