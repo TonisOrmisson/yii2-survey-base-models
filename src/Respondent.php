@@ -354,12 +354,12 @@ class Respondent extends MyActiveRecord
     }
 
     /**
-     * Check whether there are rejections for this respondnent that have clicked on reject link. This check does not check bounced e-mails
+     * Check whether there are rejections for this respondent that have clicked on reject link. This check does not check bounced e-mails
      * @return bool
      */
     public function getIsRejectedByClick()
     {
-        $rejections = \andmemasin\sampling\models\Rejection::find()
+        $rejections = Rejection::find()
             ->andWhere(['respondent_id'=>$this->primaryKey])
             // only rejections, not bounces
             ->andWhere(['is', 'bounce', null]);
