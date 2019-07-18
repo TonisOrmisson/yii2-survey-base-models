@@ -3,6 +3,7 @@
 namespace andmemasin\surveybasemodels\tests\functional;
 
 
+use andmemasin\surveybasemodels\Rejection;
 use andmemasin\surveybasemodels\Respondent;
 use Codeception\Test\Unit;
 
@@ -64,4 +65,16 @@ class RespondentTest extends Unit
 
         $this->assertEquals(2, $result);
     }
+
+
+    public function testFindByToken(){
+        $result= Respondent::findByToken("c9723dcc-daed-4078-b373-cbe173c03740");
+        $this->assertInstanceOf(Respondent::class, $result);
+    }
+
+    public function testFindByTokenFails(){
+        $result= Respondent::findByToken("c9723dcc-daed-4078-b373-cbe173c03740-NOOOOO");
+        $this->assertEmpty($result);
+    }
+
 }

@@ -93,6 +93,7 @@ class Rejection extends MyActiveRecord
             Yii::error("Looking for a rejection for code $code, but no respondent found", __METHOD__);
             return false;
         }
+        Yii::info("got repondent for $code, looking for rejections", __METHOD__);
 
         $rejections = self::find()
             ->andWhere(['respondent_id'=>$respondent->primaryKey])
