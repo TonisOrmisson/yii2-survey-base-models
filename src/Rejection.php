@@ -97,7 +97,7 @@ class Rejection extends MyActiveRecord
         $rejections = self::find()
             ->andWhere(['respondent_id'=>$respondent->primaryKey])
             // only rejections, not bounces
-            ->andWhere(['not', 'bounce', null]);
+            ->andWhere(['not', ['bounce' => null]]);
 
         return $rejections->count() > 0;
     }
