@@ -26,6 +26,10 @@ $config = [
             'identityClass' => \andmemasin\surveybasemodels\Helper\User::class,
             'enableAutoLogin' => true,
         ],
+        'cache' => [
+            'class' => 'yii\caching\FileCache',
+        ],
+
 
     ],
 ];
