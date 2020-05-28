@@ -1,7 +1,7 @@
 <?php
 
 namespace andmemasin\surveybasemodels;
-use andmemasin\myabstract\ActiveRecord;
+
 use andmemasin\myabstract\MyActiveRecord;
 use yii;
 
@@ -80,29 +80,6 @@ class Rejection extends MyActiveRecord
             ->all();
     }
 
-
-    /**
-     * Check whether there are rejections that match the respondent's token. This check does not check bounced e-mails
-     * @param string $code
-     * @return bool
-     * @deprecated
-     */
-    public static function rejectedByCode($code){
-        $respondent = Respondent::findByToken($code);
-        if (empty($respondent)) {
-            Yii::error("Looking for a rejection for code $code, but no respondent found", __METHOD__);
-            return false;
-        }
-        Yii::info("got repondent for $code, looking for rejections", __METHOD__);
-
-        $rejections = self::find()
-            ->andWhere(['respondent_id'=>$respondent->primaryKey])
-            // only rejections, not bounces
-            ->andWhere(['not', ['bounce' => null]]);
-
-        return $rejections->count() > 0;
-    }
-
     /**
      * Check whether we have a bounce registered from this email
      * @param string $email_address
@@ -112,12 +89,8 @@ class Rejection extends MyActiveRecord
     public static function bouncedByEmailAddress($email_address,$type = self::BOUNCE_TYPE_HARD){
         $rejections = self::find()
             ->andWhere('email_address=:email_address', [':email_address' => $email_address])
-            ->andWhere('type=:type', [':type' => $type])
-            ->all();
-        if($rejections){
-            return true;
-        }
-        return false;
+            ->andWhere('type=:type', [':type' => $type]);
+        return $rejections->count() > 0;
     }
 
     /**
@@ -157,10 +130,10 @@ class Rejection extends MyActiveRecord
     public function getBounceObject()
     {
         $object = json_decode($this->bounce);
-        if (!empty($object)) {
-            return $object;
+        if (empty($object)) {
+            return null;
         }
-        return null;
+        return $object;
     }
 
     /**
@@ -168,13 +141,15 @@ class Rejection extends MyActiveRecord
      */
     public function getBounceReason()
     {
-        if (!empty($this->bounceObject)) {
-            if(isset($this->bounceObject->diagnosticcode)) {
-                return $this->bounceObject->diagnosticcode;
-            }
-            if(isset($this->bounceObject->reason)) {
-                return $this->bounceObject->reason;
-            }
+        if (empty($this->bounceObject)) {
+            return null;
+        }
+
+        if(isset($this->bounceObject->diagnosticcode)) {
+            return $this->bounceObject->diagnosticcode;
+        }
+        if(isset($this->bounceObject->reason)) {
+            return $this->bounceObject->reason;
         }
         return null;
     }
@@ -184,11 +159,14 @@ class Rejection extends MyActiveRecord
      */
     public function getBounceReplyCode()
     {
-        if (!empty($this->bounceObject)) {
-            if(isset($this->bounceObject->deliverystatus)) {
-                return $this->bounceObject->deliverystatus;
-            }
+        if (empty($this->bounceObject)) {
+            return null;
         }
+
+        if(isset($this->bounceObject->deliverystatus)) {
+            return $this->bounceObject->deliverystatus;
+        }
+
         return null;
     }
 }
